@@ -33,7 +33,6 @@ function TestAPI() {
   } else if (!isLoaded) {
     return <div>Loading...</div>;
   } else {
-    console.log(item.hello)
     return (
       <div>Response from backend: {item.hello}</div>
     );
