@@ -3,13 +3,19 @@ import os
 import database.db_connector as db
 
 # Configuration
-app = Flask(__name__)
+app = Flask(__name__, static_folder='./front/build', static_url_path='/')
 db_connection = db.connect_to_database()
 
 # Routes 
 @app.route('/')
 def root():
-    return render_template("main.j2")
+    #return render_template("main.j2")
+    return app.send_static_file('index.html')
+
+# This enables use of React Router
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 @app.route('/bsg-people')
 def bsg_people():
@@ -40,6 +46,6 @@ def bsg_people():
 
 # Listener
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 9533)) 
+    port = int(os.environ.get('PORT', 80)) 
     
-    app.run(port=port, debug=True)  # debug option allows live changes
+    app.run(port=port, debug=False)  # debug option allows live changes
