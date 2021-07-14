@@ -1,4 +1,4 @@
-from flask import Flask, render_template, json
+from flask import Flask, render_template, json, jsonify
 import os
 import database.db_connector as db
 
@@ -43,6 +43,11 @@ def bsg_people():
 
     # Sends the results back to the web browser.
     return render_template("bsg.j2", bsg_people = results)
+
+@app.route('/api', methods=['GET', 'POST'])
+def welcome():
+    # return "Hello World!"
+    return jsonify(hello='world')
 
 # Listener
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
 import './App.css'
+import TestAPI from './components/TestAPI.js'
 
 export default function App() {
   return (
@@ -9,6 +10,9 @@ export default function App() {
           <ul>
             <li>
               <Link to='/'>Home</Link>
+            </li>
+            <li>
+              <Link to='/testAPI'>Test GET request</Link>
             </li>
             <li>
               <Link to='/about'>About</Link>
@@ -22,6 +26,9 @@ export default function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+          <Route path='/testAPI'>
+            <TestAPI />
+          </Route>
           <Route path='/about'>
             <About />
           </Route>
