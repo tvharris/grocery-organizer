@@ -17,9 +17,9 @@ function TestAPI() {
   // this useEffect will run once
   // similar to componentDidMount()
   useEffect(() => {
-    // fetch("http://localhost:5000/api")
+    fetch("http://localhost:5000/api")
     // fetch("http://192.168.0.4:5000/api")
-    fetch('https://quiet-brook-53041.herokuapp.com/api')
+    // fetch('https://quiet-brook-53041.herokuapp.com/api')
       .then((res) => res.json())
       .then(
         (result) => {
