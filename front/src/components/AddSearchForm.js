@@ -1,9 +1,10 @@
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    // display: 'flex',
     flexWrap: 'wrap',
   },
   textField: {
@@ -18,11 +19,11 @@ export default function LayoutTextFields() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{display: 'flex', 'align-items': 'center'}}>
+    <div style={{flex: '1', 'margin-right': '10px'}}>
         <TextField
-          id="standard-full-width"
+          id="magin-none"
           label="Search Bar"
-          style={{ margin: 8 }}
           placeholder="Search Here"
           helperText="Search"
           fullWidth
@@ -31,6 +32,8 @@ export default function LayoutTextFields() {
             shrink: true,
           }}
         />
+        </div>
+         <Button variant="outlined" style={{height: '50%'}}>+</Button>
     </div>
   );
 }

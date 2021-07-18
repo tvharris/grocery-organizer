@@ -1,6 +1,6 @@
 import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
-import AddForm from './AddForm.js'
+import AddSearchForm from './AddSearchForm.js'
 
 const rows: GridRowsProp = [
   {id: 1,  email: 'John@doe.com', username: 'john_doe' },
@@ -21,7 +21,7 @@ export default function Users() {
   return (
     <div>
   
-    <AddForm />
+    <AddSearchForm />
 
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid rows={rows} columns={columns} checkboxSelection />
