@@ -33,7 +33,7 @@ export default function LayoutTextFields() {
           }}
         />
         </div>
-         <Button variant="outlined" style={{height: '50%'}}>+</Button>
+       
     </div>
   );
 }
