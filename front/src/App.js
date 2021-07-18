@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import TestAPI from './components/TestAPI.js'
+import Users from './components/Users'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -65,28 +66,28 @@ export default function SimpleTabs() {
           onChange={handleChange}
           aria-label='simple tabs example'
         >
-          <Tab label='Item One' {...a11yProps(0)} />
-          <Tab label='Item Two' {...a11yProps(1)} />
-          <Tab label='Item Three' {...a11yProps(2)} />
+          <Tab label='Users' {...a11yProps(0)} />
+          <Tab label='GroceryLists' {...a11yProps(1)} />
+          <Tab label='Ingredients' {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <About />
+        <Users/>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <TestAPI />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Users />
+        <h2> Hello </ h2>
       </TabPanel>
     </div>
   )
 }
 
-function About() {
-  return <h2>About</h2>
-}
+// function About() {
+//   return <h2>About</h2>
+// }
 
-function Users() {
-  return <h2>Users</h2>
-}
+// function Users() {
+//   return <h2>Users</h2>
+// }
