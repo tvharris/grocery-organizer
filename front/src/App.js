@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import TestAPI from './components/TestAPI.js'
 import Users from './components/Users'
+import GroceryList from './components/GroceryList'
+import Ingredients from './components/Ingredients'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -75,10 +77,10 @@ export default function SimpleTabs() {
         <Users/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <TestAPI />
+        <GroceryList />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <h2> Hello </ h2>
+        <Ingredients />
       </TabPanel>
     </div>
   )
