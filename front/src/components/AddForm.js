@@ -49,7 +49,7 @@ const AccordionDetails = withStyles((theme) => ({
   },
 }))(MuiAccordionDetails);
 
-export default function CustomizedAccordions() {
+export default function CustomizedAccordions({to_add, in1, in2}) {
   const [expanded, setExpanded] = React.useState('panel0');
 
   const handleChange = (panel) => (event, newExpanded) => {
@@ -60,11 +60,11 @@ export default function CustomizedAccordions() {
     <div>
       <Accordion square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Typography>Add A User</Typography>
+          <Typography>Add A {to_add}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-        <TextField id="standard-basic" label="Email" />
-        <TextField id="standard-basic" label="Username" />
+        <TextField id="standard-basic" label={in1} />
+        <TextField id="standard-basic" label={in2} />
          <Button variant="contained" color="primary">
       +
     </Button>

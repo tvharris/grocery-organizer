@@ -11,6 +11,8 @@ import TestAPI from './components/TestAPI.js'
 import Users from './components/Users'
 import GroceryList from './components/GroceryList'
 import Ingredients from './components/Ingredients'
+import User_Ingredients from './components/UserIngredients'
+import GroceryList_Ingredients from './components/groceryListIngredient'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -71,6 +73,8 @@ export default function SimpleTabs() {
           <Tab label='Users' {...a11yProps(0)} />
           <Tab label='GroceryLists' {...a11yProps(1)} />
           <Tab label='Ingredients' {...a11yProps(2)} />
+           <Tab label='User_Ingredients' {...a11yProps(3)} />
+            <Tab label='GroceryList_Ingredients' {...a11yProps(4)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -81,6 +85,12 @@ export default function SimpleTabs() {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Ingredients />
+      </TabPanel>
+       <TabPanel value={value} index={3}>
+        <User_Ingredients />
+      </TabPanel>
+       <TabPanel value={value} index={4}>
+        <GroceryList_Ingredients />
       </TabPanel>
     </div>
   )

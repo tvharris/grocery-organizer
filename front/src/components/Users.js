@@ -23,7 +23,7 @@ export default function Users() {
     <div>
   
     <SearchForm />
-    <AddForm />
+    <AddForm to_add="User" in1="Email" in2="Username" />
 
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid rows={rows} columns={columns} checkboxSelection />
