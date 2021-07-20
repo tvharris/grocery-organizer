@@ -47,7 +47,11 @@ const tableIcons = {
 export default function UserIngredients() {
   var columns = [
     { title: 'id', field: 'id', hidden: true },
-    { title: 'Ingredient', field: 'name' },
+    {
+      title: 'Ingredient',
+      field: 'name',
+      lookup: { Carrots: 'Carrots', Cilantro: 'Cilantro', Milk: 'Milk' },
+    },
   ]
 
   const [data, setData] = useState([
