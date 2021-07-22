@@ -68,7 +68,7 @@ INSERT INTO GroceryLists (userID, listDate) VALUE ((SELECT userID from Users WHE
 -- User_Ingredients
 INSERT INTO User_Ingredients (userID, ingredientID) VALUE ((SELECT userID from Users WHERE username='test_user'),(SELECT ingredientID from Ingredients WHERE name='brocolli'));
 
-INSERT INTO User_Ingredients (userID, ingredientID) VALUE ((SELECT userID from Users WHERE username='test_user2'),(SELECT ingredientID from Ingredients WHERE name='brocolli'));
+INSERT INTO User_Ingredients (userID, ingredientID) VALUE ((SELECT userID from Users WHERE username='john_doe'),(SELECT ingredientID from Ingredients WHERE name='brocolli'));
 
 -- GroceryLists
 INSERT INTO GroceryList_Ingredients (listID, ingredientID) VALUES ((SELECT listID from GroceryLists WHERE listDate=CURDATE()),(SELECT ingredientID from Ingredients where name='brocolli'));
