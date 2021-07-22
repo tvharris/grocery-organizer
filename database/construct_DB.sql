@@ -40,6 +40,14 @@ CREATE TABLE User_Ingredients(
   PRIMARY KEY (userID, ingredientID)
 );
 
+CREATE TABLE GroceryList_Ingredients(
+  listID INT NOT NULL,
+  ingredientID INT NOT NULL,
+  FOREIGN KEY (listID) REFERENCES GroceryLists (listID),
+  FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID),
+  PRIMARY KEY (listID, ingredientID)
+);
+
 -- Actual Insertion Into Tables
 
 -- Users
@@ -62,3 +70,5 @@ INSERT INTO User_Ingredients (userID, ingredientID) VALUE ((SELECT userID from U
 
 INSERT INTO User_Ingredients (userID, ingredientID) VALUE ((SELECT userID from Users WHERE username='test_user2'),(SELECT ingredientID from Ingredients WHERE name='brocolli'));
 
+-- GroceryLists
+INSERT INTO GroceryList_Ingredients (listID, ingredientID) VALUES ((SELECT listID from GroceryLists WHERE listDate=CURDATE()),(SELECT ingredientID from Ingredients where name='brocolli'));
