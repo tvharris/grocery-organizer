@@ -27,7 +27,7 @@ CREATE TABLE Ingredients (
 CREATE TABLE GroceryLists(
   listID INT AUTO_INCREMENT NOT NULL,
   userID INT NOT NULL,
-  listDate DATE NOT NULL,
+  listDate DATETIME NOT NULL,
   PRIMARY KEY (listID),
   FOREIGN KEY (userID) REFERENCES Users (userID)
 );
@@ -63,7 +63,7 @@ INSERT INTO FoodGroups (name) VALUE ('VEGETABLE');
 INSERT INTO Ingredients (name, foodGroupID) VALUE ('brocolli', (SELECT foodGroupID from FoodGroups WHERE name='VEGETABLE'));
 
 -- GroceryLists
-INSERT INTO GroceryLists (userID, listDate) VALUE ((SELECT userID from Users WHERE username='test_user'), CURDATE()); 
+INSERT INTO GroceryLists (userID, listDate) VALUE ((SELECT userID from Users WHERE username='test_user'), NOW()); 
 
 -- User_Ingredients
 INSERT INTO User_Ingredients (userID, ingredientID) VALUE ((SELECT userID from Users WHERE username='test_user'),(SELECT ingredientID from Ingredients WHERE name='brocolli'));
@@ -71,4 +71,4 @@ INSERT INTO User_Ingredients (userID, ingredientID) VALUE ((SELECT userID from U
 INSERT INTO User_Ingredients (userID, ingredientID) VALUE ((SELECT userID from Users WHERE username='john_doe'),(SELECT ingredientID from Ingredients WHERE name='brocolli'));
 
 -- GroceryLists
-INSERT INTO GroceryList_Ingredients (listID, ingredientID) VALUES ((SELECT listID from GroceryLists WHERE listDate=CURDATE()),(SELECT ingredientID from Ingredients where name='brocolli'));
+INSERT INTO GroceryList_Ingredients (listID, ingredientID) VALUES ((SELECT listID from GroceryLists WHERE userID='test_user'),(SELECT ingredientID from Ingredients where name='brocolli'));
