@@ -22,6 +22,8 @@ CREATE TABLE Ingredients (
   PRIMARY KEY (ingredientID),
   CONSTRAINT unique_name UNIQUE(name),
   FOREIGN KEY (foodGroupID) REFERENCES FoodGroups(foodGroupID)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
  );
  
 CREATE TABLE GroceryLists(
@@ -30,13 +32,19 @@ CREATE TABLE GroceryLists(
   listDate DATETIME NOT NULL,
   PRIMARY KEY (listID),
   FOREIGN KEY (userID) REFERENCES Users (userID)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
 );
 
 CREATE TABLE User_Ingredients(
   userID INT NOT NULL,
   ingredientID INT NOT NULL,
   FOREIGN KEY (userID) REFERENCES Users (userID),
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
   FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID),
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
   PRIMARY KEY (userID, ingredientID)
 );
 
@@ -44,7 +52,11 @@ CREATE TABLE GroceryList_Ingredients(
   listID INT NOT NULL,
   ingredientID INT NOT NULL,
   FOREIGN KEY (listID) REFERENCES GroceryLists (listID),
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
   FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID),
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
   PRIMARY KEY (listID, ingredientID)
 );
 
