@@ -3,7 +3,7 @@
  --## Users:
  --- Initial Load: 
 
-SELECT * FROM Users;
+SELECT email, username, userID FROM Users;
 
  --- Add:  
 INSERT INTO Users (email, username) VALUE (x, y);
@@ -12,19 +12,16 @@ INSERT INTO Users (email, username) VALUE (x, y);
 UPDATE Users SET (email) = 'new_value' WHERE userID='_'[ID]''
 
  --- Edit users : 
-UPDATE Users SET (users) = 'new_value' WHERE userID=''[ID]''
+UPDATE Users SET (username) = 'new_value' WHERE userID=''[ID]''
 
  --- Delete : 
 DELETE FROM Users WHERE userID="'[ID]'";
 
- --#### Possible
- --> Search : 
-SELECT username, email FROM Users WHERE [QUERY];  (or use automatic)
 
  --## Grocery Lists:
 
  --- Initial Load : 
-SELECT username, listDate, listID FROM GroceryLists JOIN Users;
+SELECT username, listDate, listID FROM GroceryLists JOIN Users USING (userID);
 
 
  --- Add : 
@@ -37,13 +34,10 @@ DELETE FROM GroceryLists WHERE listID='[ID]';
  --> Initial Load : 
 SELECT username, userID FROM Users;
 
- --#### Possible
- --> Initial Load: 
-SELECT username, listDate FROM GroceryLists JOIN Users WHERE listDate=[INPUT] or username = [INPUT];
  --## Ingredients:
 
  --- Initial Load : 
-SELECT Ingredients.name, FoodGroups.name, Ingredients.ingredientID FROM Ingredients JOIN FoodGroups;
+SELECT Ingredients.name, FoodGroups.name, Ingredients.ingredientID FROM Ingredients JOIN FoodGroups USING (foodGroupID);
 
  --- Add: 
 INSERT INTO Ingredients (name, foodGroupID) VALUE ([NAME], (SELECT foodGroupID WHERE name='FoodGroups.name'));
@@ -51,8 +45,8 @@ INSERT INTO Ingredients (name, foodGroupID) VALUE ([NAME], (SELECT foodGroupID W
  --- Edit name : 
 UPDATE Ingredients SET (name) = '[NEW NAME]' WHERE ingredientID='_'[ID]''
 
- --- Edit goodGroupID : 
-UPDATE Ingredients SET (goodGroupID) = (SELECT foodGroupID from FoodGroups WHERE name=[FOODGROUP_NAME]) WHERE ingredientID='_'[ID]''
+ --- Edit foodGroupID : 
+UPDATE Ingredients SET (foodGroupID) = (SELECT foodGroupID from FoodGroups WHERE name=[FOODGROUP_NAME]) WHERE ingredientID='_'[ID]''
 
  --- Delete : 
 DELETE FROM Ingredients WHERE ingredientID='[ID]';
@@ -61,16 +55,11 @@ DELETE FROM Ingredients WHERE ingredientID='[ID]';
  --> Initial Load : 
 SELECT * FROM FoodGroups;
 
- --#### Possible
- --> Search :
-SELECT Ingredients.name Foodgroups.namefrom FROM Ingredients 
-JOIN Foodgroups 
-WHERE Ingredients.name=[INPUT] or FoodGroups.name=[INPUT]; (or use automatic)
 
  --## Food Groups:
 
  --- Initial Load :
-SELECT * FROM FoodGroups;
+SELECT name, foodGroupID FROM FoodGroups;
 
  --- Add : 
 INSERT INTO FoodGroups (name) VALUE ([INPUT]);
@@ -79,18 +68,15 @@ INSERT INTO FoodGroups (name) VALUE ([INPUT]);
 UPDATE FoodGroups SET name WHERE foodGroupID='[ID]' ;
 
  --- Delete : 
-DELETE FoodGroups WHERE foodGroupID='[ID]';
-
- --#### Possible
- --> Search : 
-SELECT * from FoodGroups WHERE name='[INPUT]'; (or use automatic)
+DELETE FROM FoodGroups WHERE foodGroupID='[ID]';
 
  --## User Ingredients:
 
  --- Initial Load - Depends on User Dropdown:
 SELECT name from User_Ingredients
-JOIN Ingredients WHERE User_Ingredients.ingredientID = Ingredient.ingredientID
-JOIN Users WHERE User_Ingredients.userID = Users.userID;
+JOIN Ingredients USING (ingredientID)
+WHERE User_Ingredients.userID = 
+(SELECT userID from USERS WHERE username = '[INPUT FROM DROPDOWN]')
 
  --- Add :
 INSERT INTO User_Ingredients (userID, ingredientID) 
@@ -98,39 +84,28 @@ VALUES ('[USER_ID_FROM_DROPDOWN]', '[INGREDIENT_ID_FROM_DROPDOWN]');
 
 
  --- Delete : 
-DELETE -- from Ingredients WHERE --;
+DELETE FROM User_Ingredients WHERE userID='[userID]' AND listID='[listID]' --;
 
  --#### Dropdown - Select User (User)
  --> Initial Load 
-SELECT username FROM Users;
+SELECT username, userId FROM Users;
 
  --#### Dropdown - Add Form (Ingredient)
  --> Initial Load : 
-SELECT name FROM Ingredients;
-
- --#### Possible
- --> Search : 
-SELECT name from User_Ingredients
-JOIN Ingredients WHERE User_Ingredients.ingredientID = Ingredient.ingredientID
-JOIN Users WHERE User_Ingredients.userID = Users.userID
-WHERE name = '[INPUT]';
+SELECT name, ingredientID FROM Ingredients;
 
  --## Grocery-List Ingredients:
 
  --### Grocery Lists
 
  --- Initial Load : 
-SELECT * FROM GroceryLists;
+SELECT username, listDate, listID FROM GroceryLists JOIN Users USING (userID);
 
  --- Load Ingredients from List (On Click of List) : 
-SELECT name from User_Ingredients
-JOIN Ingredients WHERE User_Ingredients.ingredientID = Ingredient.ingredientID
-JOIN Users WHERE User_Ingredients.userID = Users.userID;
+SELECT name, ingredientID from GroceryLists_Ingredients
+JOIN Ingredients USING (ingredientID)
+WHERE GroceryLists_Ingredients.listID = ['GroceryLists.listID' (From INPUT)]; 
 
- --#### Possible
- --> Search : 
-
-SELECT --- from Users; (or use automatic)
 
  --### GroceryLists_Ingredients
 
@@ -140,13 +115,9 @@ VALUES ('[CURRENT_LIST_ID]', (SELECT ingredientID from Ingredient WHERE name='[S
 
 
  --- Delete : 
-DELETE FROM User_Ingredients WHERE ingredientID='[ID]' AND listID = '[ID]';
+DELETE FROM GroceryLists_Ingredients WHERE ingredientID='[ID]' AND listID = '[ID]';
 
  --#### Dropdown - Add Form (Ingredient)
  --> Initial Load : 
-SELECT * FROM Ingredients;
+SELECT name, ingredientID FROM Ingredients;
 
- --#### Possible
- --> Search - 
-
-SELECT --- from Users; (or use automatic)
