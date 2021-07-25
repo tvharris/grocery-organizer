@@ -42,9 +42,9 @@ CREATE TABLE User_Ingredients(
   FOREIGN KEY (userID) REFERENCES Users (userID),
   ON UPDATE CASCADE
   ON DELETE CASCADE
-  FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID),
+  FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID)
   ON UPDATE CASCADE
-  ON DELETE CASCADE
+  ON DELETE CASCADE,
   PRIMARY KEY (userID, ingredientID)
 );
 
@@ -54,13 +54,13 @@ CREATE TABLE GroceryList_Ingredients(
   FOREIGN KEY (listID) REFERENCES GroceryLists (listID),
   ON UPDATE CASCADE
   ON DELETE CASCADE
-  FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID),
+  FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID)
   ON UPDATE CASCADE
-  ON DELETE CASCADE
+  ON DELETE CASCADE,
   PRIMARY KEY (listID, ingredientID)
 );
 
-Actual Insertion Into Tables
+-- Actual Insertion Into Tables
 
 -- Users
 INSERT INTO Users (email, username) VALUE ('test@test.com', 'test_user');

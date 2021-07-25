@@ -2,5 +2,8 @@
 /venv
 .vscode
 *.pyc 
+*.zip
 __pycache__/  
 instance/
+
+database/Step_4_Draft.zip
