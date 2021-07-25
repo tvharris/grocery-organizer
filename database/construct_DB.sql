@@ -71,7 +71,7 @@ INSERT INTO Users (email, username) VALUE ('harritra@oregonstate.edu', 'travis_h
 
 -- Food Groups
 INSERT INTO FoodGroups (name) VALUE ('dairy');
-INSERT INTO FoodGroups (name) VALUE ('vegetABLE');
+INSERT INTO FoodGroups (name) VALUE ('vegetable');
 INSERT INTO FoodGroups (name) VALUE ('spice');
 INSERT INTO FoodGroups (name) VALUE ('meat');
 INSERT INTO FoodGroups (name) VALUE ('cheese');

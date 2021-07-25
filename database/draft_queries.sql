@@ -37,7 +37,7 @@ SELECT username, userID FROM Users;
  --## Ingredients:
 
  --- Initial Load : 
-SELECT Ingredients.name, FoodGroups.name, Ingredients.ingredientID FROM Ingredients JOIN FoodGroups USING (foodGroupID);
+SELECT Ingredients.name, FoodGroups.name, Ingredients.ingredientID FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID);
 
  --- Add: 
 INSERT INTO Ingredients (name, foodGroupID) VALUE ([NAME], (SELECT foodGroupID WHERE name='FoodGroups.name'));
@@ -75,8 +75,7 @@ DELETE FROM FoodGroups WHERE foodGroupID='[ID]';
  --- Initial Load - Depends on User Dropdown:
 SELECT name from User_Ingredients
 JOIN Ingredients USING (ingredientID)
-WHERE User_Ingredients.userID = 
-(SELECT userID from USERS WHERE username = '[INPUT FROM DROPDOWN]')
+WHERE User_Ingredients.userID = ('[INPUT FROM DROPDOWN]')
 
  --- Add :
 INSERT INTO User_Ingredients (userID, ingredientID) 
