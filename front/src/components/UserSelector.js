@@ -47,7 +47,6 @@ export default function SimpleSelect() {
                     value={user}
                     onChange={handleChange}
                 >
-                    <MenuItem value="test">Test</MenuItem>
                     { user.map((u) => (<MenuItem value={u.userID}>{u.username}</MenuItem>))}
                 </Select>
             </FormControl>
