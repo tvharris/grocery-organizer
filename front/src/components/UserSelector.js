@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleSelect() {
     const classes = useStyles();
-    const [user, setUser] = useState('No User Selected');
+    const [user, setUser] = useState([]);
 
     /*fetch ingredients on load*/
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function SimpleSelect() {
                 setUser([...res])
             )
         console.log(user)
-    })
+    },[])
 
     const handleChange = (event) => {
         setUser(event.target.value);
@@ -48,6 +48,7 @@ export default function SimpleSelect() {
                     onChange={handleChange}
                 >
                     <MenuItem value="test">Test</MenuItem>
+                    { user.map((u) => (<MenuItem value={u.userID}>{u.username}</MenuItem>))}
                 </Select>
             </FormControl>
         </div>
