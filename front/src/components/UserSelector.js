@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,12 +18,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleSelect() {
     const classes = useStyles();
-    const [user, setUser] = React.useState('No User Selected');
+    const [user, setUser] = useState('No User Selected');
+
+    /*fetch ingredients on load*/
+    useEffect(() => {
+        /*load the user's database info*/
+        fetch('http://0.0.0.0:5000/users')
+            .then(res => res.json())
+            .then(res =>
+                setUser([...res])
+            )
+        console.log(user)
+    })
 
     const handleChange = (event) => {
         setUser(event.target.value);
     };
 
+    // mapping attempt
+    //{ user.map((u) => (<MenuItem value={u.userID}>{u.username}</MenuItem>))}
     return (
         <div>
             <FormControl className={classes.formControl}>
@@ -34,8 +47,7 @@ export default function SimpleSelect() {
                     value={user}
                     onChange={handleChange}
                 >
-                    <MenuItem value={1}>john_doe</MenuItem>
-                    <MenuItem value={2}>jane_doe</MenuItem>
+                    <MenuItem value="test">Test</MenuItem>
                 </Select>
             </FormControl>
         </div>

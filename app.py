@@ -67,6 +67,42 @@ def grocery_lists():
         results = cursor.fetchall()
         return jsonify(results)
 
+@app.route('/ingredients', methods=['GET', 'POST'])
+def ingredients():
+
+    # if we receive a get request we need to execute a get query and return
+    # all users from the DB as json.
+    if request.method == 'GET':
+        query = "SELECT Ingredients.name, FoodGroups.name, Ingredients.ingredientID FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID)"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
+
+
+@app.route('/food_group', methods=['GET', 'POST'])
+def food_group():
+
+    # if we receive a get request we need to execute a get query and return
+    # all users from the DB as json.
+    if request.method == 'GET':
+        query = "SELECT name, foodGroupID FROM FoodGroups"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
+
+# @app.route('/user_ingredients', methods=['GET', 'POST'])
+# def user_ingredients():
+
+    # # if we receive a get request we need to execute a get query and return
+    # # all users from the DB as json.
+    # if request.method == 'GET':
+        # query = " SELECT name from User_Ingredients
+                # JOIN Ingredients USING (ingredientID)
+                # WHERE User_Ingredients.userID = ('[INPUT FROM DROPDOWN]')
+                # "
+        # cursor = db.execute_query(db_connection=db_connection, query=query)
+        # results = cursor.fetchall()
+        # return jsonify(results)
 
 @app.route('/api', methods=['GET', 'POST'])
 def welcome():
