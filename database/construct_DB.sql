@@ -23,7 +23,7 @@ CREATE TABLE Ingredients (
   CONSTRAINT unique_name UNIQUE(name),
   FOREIGN KEY (foodGroupID) REFERENCES FoodGroups(foodGroupID)
   ON UPDATE CASCADE
-  ON DELETE CASCADE
+  ON DELETE SET NULL
  );
  
 CREATE TABLE GroceryLists(
