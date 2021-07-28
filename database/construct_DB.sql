@@ -39,9 +39,9 @@ CREATE TABLE GroceryLists(
 CREATE TABLE User_Ingredients(
   userID INT NOT NULL,
   ingredientID INT NOT NULL,
-  FOREIGN KEY (userID) REFERENCES Users (userID),
+  FOREIGN KEY (userID) REFERENCES Users (userID)
   ON UPDATE CASCADE
-  ON DELETE CASCADE
+  ON DELETE CASCADE,
   FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID)
   ON UPDATE CASCADE
   ON DELETE CASCADE,
@@ -51,9 +51,9 @@ CREATE TABLE User_Ingredients(
 CREATE TABLE GroceryList_Ingredients(
   listID INT NOT NULL,
   ingredientID INT NOT NULL,
-  FOREIGN KEY (listID) REFERENCES GroceryLists (listID),
+  FOREIGN KEY (listID) REFERENCES GroceryLists (listID)
   ON UPDATE CASCADE
-  ON DELETE CASCADE
+  ON DELETE CASCADE,
   FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID)
   ON UPDATE CASCADE
   ON DELETE CASCADE,

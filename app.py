@@ -1,4 +1,5 @@
-from flask import Flask, render_template, json, jsonify
+from flask import Flask, render_template, json, jsonify, request
+from flask_cors import CORS
 import os
 import database.db_connector as db
 
@@ -21,7 +22,7 @@ def not_found(e):
 def bsg_people():
 
     # Write the query and save it to a variable
-    query = "SELECT * FROM bsg_people;"
+    query = "SELECT * FROM Users;"
 
     # The way the interface between MySQL and Flask works is by using an
     # object called a cursor. Think of it as the object that acts as the
@@ -43,6 +44,29 @@ def bsg_people():
 
     # Sends the results back to the web browser.
     return render_template("bsg.j2", bsg_people = results)
+
+@app.route('/users', methods=['GET', 'POST'])
+def users():
+
+    # if we receive a get request we need to execute a get query and return
+    # all users from the DB as json.
+    if request.method == 'GET':
+        query = "SELECT * FROM Users;"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
+
+@app.route('/grocery_lists', methods=['GET', 'POST'])
+def grocery_lists():
+
+    # if we receive a get request we need to execute a get query and return
+    # all users from the DB as json.
+    if request.method == 'GET':
+        query = "SELECT username, listDate, listID FROM GroceryLists JOIN Users USING (userID)"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
+
 
 @app.route('/api', methods=['GET', 'POST'])
 def welcome():
