@@ -51,7 +51,7 @@ def bsg_people():
     return render_template("bsg.j2", bsg_people=results)
 
 
-@app.route('/users', methods=['GET', 'POST', 'DELETE'])
+@app.route('/users', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def users():
 
     # if we receive a get request we need to execute a get query and return
@@ -67,12 +67,14 @@ def users():
         json_data = request.get_json()
         email = json_data['email']
         username = json_data['username']
-        query = f"INSERT INTO Users (email, username) VALUE ('{email}', '{username}');"
+        query = f"INSERT INTO Users (email, username) \
+                  VALUE ('{email}', '{username}');"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
 
         # Flask does not like this return value - look into error
-        return results
+        return(jsonify(results), 200)
+        # return results
 
     # DELETE ROUTE
     if request.method == 'DELETE':
@@ -82,7 +84,12 @@ def users():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
 
-        return results
+        return(jsonify(results), 200)
+        # return results
+
+    # PUT ROUTE
+    if request.method == 'PUT':
+        pass
 
 
 @ app.route('/grocery_lists', methods=['GET', 'POST'])
@@ -95,7 +102,8 @@ def grocery_lists():
                  FROM GroceryLists JOIN Users USING (userID)"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        return jsonify(results)
+        # return jsonify(results)
+        return(jsonify(results), 200)
 
 
 @ app.route('/ingredients', methods=['GET', 'POST'])
@@ -109,7 +117,8 @@ def ingredients():
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID)"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        return jsonify(results)
+        # return jsonify(results)
+        return(jsonify(results), 200)
 
 
 @ app.route('/food_group', methods=['GET', 'POST'])
@@ -121,7 +130,8 @@ def food_group():
         query = "SELECT name, foodGroupID FROM FoodGroups"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        return jsonify(results)
+        # return jsonify(results)
+        return(jsonify(results), 200)
 
 # @app.route('/user_ingredients', methods=['GET', 'POST'])
 # def user_ingredients():
