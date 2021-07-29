@@ -4,6 +4,7 @@ import { forwardRef } from 'react'
 import Container from '@material-ui/core/Container'
 import UserSelector from './UserSelector'
 
+
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowDownward from '@material-ui/icons/ArrowDownward'
 import Check from '@material-ui/icons/Check'
@@ -88,6 +89,7 @@ export default function UserIngredients() {
         setData([...dataDelete])
         resolve()
     }
+
 
     return (
         <div>

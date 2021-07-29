@@ -44,6 +44,14 @@ const tableIcons = {
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 }
 
+//postData('http://0.0.0.0:5000/users', {
+//method: 'POST',
+//headers: {
+//'Content-Type': 'application/json',
+//},
+//body: JSON.stringify(newData),
+//})
+
 export default function Users() {
 
     var columns = [
@@ -65,6 +73,21 @@ export default function Users() {
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
+        fetch('http://0.0.0.0:5000/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
         let dataToAdd = [...data]
         dataToAdd.push(newData)
         setData(dataToAdd)
@@ -80,6 +103,21 @@ export default function Users() {
     }
 
     const handleRowDelete = (oldData, resolve) => {
+        fetch('http://0.0.0.0:5000/users', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(oldData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
         const dataDelete = [...data]
         const index = oldData.tableData.id
         dataDelete.splice(index, 1)
@@ -89,28 +127,28 @@ export default function Users() {
 
     return (
         <div>
-            <Container maxWidth='sm'>
-                <MaterialTable
-                    title='Users'
-                    columns={columns}
-                    data={data}
-                    icons={tableIcons}
-                    editable={{
-                        onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            handleRowUpdate(newData, oldData, resolve)
-                        }),
-                        onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            handleRowAdd(newData, resolve)
-                        }),
-                        onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            handleRowDelete(oldData, resolve)
-                        }),
-                    }}
-                />
-            </Container>
+        <Container maxWidth='sm'>
+        <MaterialTable
+        title='Users'
+        columns={columns}
+        data={data}
+        icons={tableIcons}
+        editable={{
+            onRowUpdate: (newData, oldData) =>
+                new Promise((resolve) => {
+                    handleRowUpdate(newData, oldData, resolve)
+                }),
+                    onRowAdd: (newData) =>
+                new Promise((resolve) => {
+                    handleRowAdd(newData, resolve)
+                }),
+                    onRowDelete: (oldData) =>
+                new Promise((resolve) => {
+                    handleRowDelete(oldData, resolve)
+                }),
+        }}
+        />
+        </Container>
         </div>
     )
 }

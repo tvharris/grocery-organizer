@@ -70,7 +70,7 @@ export default function Ingredients() {
                 setData([...res])
             )
         console.log(data)
-    })
+    },[])
 
     const handleRowAdd = (newData, resolve) => {
         let dataToAdd = [...data]
