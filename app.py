@@ -27,6 +27,7 @@ def not_found(e):
 def bsg_people():
 
     # Write the query and save it to a variable
+
     query = "SELECT * FROM Users;"
 
     # The way the interface between MySQL and Flask works is by using an
@@ -57,6 +58,8 @@ def users():
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
+
+        # execute SQL query
         query = "SELECT * FROM Users;"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
@@ -64,32 +67,45 @@ def users():
 
     # POST ROUTE
     if request.method == 'POST':
+        # extract data from request object
         json_data = request.get_json()
         email = json_data['email']
         username = json_data['username']
+
+        # execute SQL query
         query = f"INSERT INTO Users (email, username) \
                   VALUE ('{email}', '{username}');"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-
-        # Flask does not like this return value - look into error
-        return(jsonify(results), 200)
-        # return results
+        print(jsonify(results))
+        return jsonify(results)
 
     # DELETE ROUTE
     if request.method == 'DELETE':
+        # extract data from request object
         json_data = request.get_json()
         user_id = json_data['userID']
+
+        # execute SQL query
         query = f"DELETE FROM Users WHERE userID = '{user_id}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-
-        return(jsonify(results), 200)
-        # return results
+        return jsonify(results)
 
     # PUT ROUTE
     if request.method == 'PUT':
-        pass
+        # extract data from request object
+        json_data = request.get_json()
+        email = json_data['email']
+        username = json_data['username']
+        userID = json_data['userID']
+
+        # execute SQL query
+        query = f"UPDATE Users SET username = '{username}', email = '{email}' WHERE userID = '{userID}';"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+
+        return jsonify(json_data)
 
 
 @ app.route('/grocery_lists', methods=['GET', 'POST'])
@@ -98,6 +114,7 @@ def grocery_lists():
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
+
         query = "SELECT username, listDate, listID \
                  FROM GroceryLists JOIN Users USING (userID)"
         cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -112,6 +129,7 @@ def ingredients():
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
+
         query = "SELECT \
                  Ingredients.name, FoodGroups.name, Ingredients.ingredientID \
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID)"
@@ -127,6 +145,7 @@ def food_group():
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
+
         query = "SELECT name, foodGroupID FROM FoodGroups"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
@@ -139,6 +158,7 @@ def food_group():
     # # if we receive a get request we need to execute a get query and return
     # # all users from the DB as json.
     # if request.method == 'GET':
+
         # query = " SELECT name from User_Ingredients
         # JOIN Ingredients USING (ingredientID)
         # WHERE User_Ingredients.userID = ('[INPUT FROM DROPDOWN]')

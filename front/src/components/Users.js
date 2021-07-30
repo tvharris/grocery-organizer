@@ -88,14 +88,29 @@ export default function Users() {
                 console.log('Error:', error)
             })
 
-        let dataToAdd = [...data]
+        let dataToAdd = [...newData]
         dataToAdd.push(newData)
         setData(dataToAdd)
         resolve()
     }
 
     const handleRowUpdate = (newData, oldData, resolve) => {
-        const dataUpdate = [...data]
+        fetch('http://0.0.0.0:5000/users', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
+        const dataUpdate = [...newData]
         const index = oldData.tableData.id
         dataUpdate[index] = newData
         setData([...dataUpdate])
