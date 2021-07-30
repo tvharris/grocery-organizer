@@ -51,22 +51,22 @@ export default function UserIngredients() {
         {
             title: 'Ingredient',
             field: 'name',
-            lookup: { Carrots: 'Carrots', Cilantro: 'Cilantro', Milk: 'Milk' },
+            //lookup: { Carrots: 'Carrots', Cilantro: 'Cilantro', Milk: 'Milk' },
         },
     ]
 
-    const [data, setData] = useState([])
+
 
     /*fetch user_ingredients on load*/
-    useEffect(() => {
-        /*load the user's database info*/
-        fetch('http://0.0.0.0:5000/user_ingredients')
-            .then(res => res.json())
-            .then(res =>
-                setData([...res])
-            )
-        console.log(data)
-    })
+    //useEffect(() => {
+    //[>load the user's database info<]
+    //fetch('http://0.0.0.0:5000/user_ingredients')
+    //.then(res => res.json())
+    //.then(res =>
+    //setData([...res])
+    //)
+    //console.log(data)
+    //})
     const handleRowAdd = (newData, resolve) => {
         let dataToAdd = [...data]
         dataToAdd.push(newData)
@@ -91,32 +91,79 @@ export default function UserIngredients() {
     }
 
 
+    // State for the Users
+    const [users, setUsers] = useState([]);
+
+    // State for Selector
+    const [selectedUser, setSelectedUser] = useState('')
+
+    // State for UserIngredients
+    const [data, setData] = useState([])
+
+    useEffect(() => {
+
+        // Use GET request to maintain RESTfulness of API
+        fetch(`http://0.0.0.0:5000/user_ingredients/${selectedUser}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+                setData([...data])
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
+    }, [selectedUser])
+
+
+
+    /*fetch ingredients on load*/
+    useEffect(() => {
+        /*load the user's database info*/
+        fetch('http://0.0.0.0:5000/users')
+            .then(res => res.json())
+            .then(res =>
+                setUsers([...res])
+            )
+    }, [])
+
+
     return (
         <div>
-            <Container maxWidth='sm'>
-                <UserSelector/>
-                <br></br>
-                <MaterialTable
-                    title='User Ingredients'
-                    columns={columns}
-                    data={data}
-                    icons={tableIcons}
-                    editable={{
-                        onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            handleRowUpdate(newData, oldData, resolve)
-                        }),
-                        onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            handleRowAdd(newData, resolve)
-                        }),
-                        onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            handleRowDelete(oldData, resolve)
-                        }),
-                    }}
-                />
-            </Container>
+        <Container maxWidth='sm'>
+
+        {/* User Selector */}
+        <UserSelector
+        users={users}
+        setUsers={setUsers}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
+        />
+
+        <br></br>
+
+        {/* Table Elements */}
+        <MaterialTable
+        title='User Ingredients'
+        columns={columns}
+        data={data}
+        icons={tableIcons}
+        editable={{
+            onRowUpdate: (newData, oldData) =>
+                new Promise((resolve) => {
+                    handleRowUpdate(newData, oldData, resolve)
+                }),
+                    onRowAdd: (newData) =>
+                new Promise((resolve) => {
+                    handleRowAdd(newData, resolve)
+                }),
+                    onRowDelete: (oldData) =>
+                new Promise((resolve) => {
+                    handleRowDelete(oldData, resolve)
+                }),
+        }}
+        />
+        </Container>
         </div>
     )
 }

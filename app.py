@@ -151,20 +151,20 @@ def food_group():
         # return jsonify(results)
         return(jsonify(results), 200)
 
-# @app.route('/user_ingredients', methods=['GET', 'POST'])
-# def user_ingredients():
 
-    # # if we receive a get request we need to execute a get query and return
-    # # all users from the DB as json.
-    # if request.method == 'GET':
+@app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
+def user_ingredients(user_id):
 
-        # query = " SELECT name from User_Ingredients
-        # JOIN Ingredients USING (ingredientID)
-        # WHERE User_Ingredients.userID = ('[INPUT FROM DROPDOWN]')
-        # "
-        # cursor = db.execute_query(db_connection=db_connection, query=query)
-        # results = cursor.fetchall()
-        # return jsonify(results)
+    # if we receive a get request we need to execute a get query and return
+    # all users from the DB as json.
+    if request.method == 'GET':
+        query = f"SELECT name from User_Ingredients \
+                JOIN Ingredients USING (ingredientID)\
+                WHERE User_Ingredients.userID = {user_id}"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        print(jsonify(results))
+        return jsonify(results)
 
 
 @ app.route('/api', methods=['GET', 'POST'])
