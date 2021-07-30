@@ -88,7 +88,7 @@ export default function Users() {
                 console.log('Error:', error)
             })
 
-        let dataToAdd = [...newData]
+        let dataToAdd = [...data]
         dataToAdd.push(newData)
         setData(dataToAdd)
         resolve()
@@ -110,7 +110,7 @@ export default function Users() {
                 console.log('Error:', error)
             })
 
-        const dataUpdate = [...newData]
+        const dataUpdate = [...data]
         const index = oldData.tableData.id
         dataUpdate[index] = newData
         setData([...dataUpdate])

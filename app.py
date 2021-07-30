@@ -104,8 +104,7 @@ def users():
         query = f"UPDATE Users SET username = '{username}', email = '{email}' WHERE userID = '{userID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-
-        return jsonify(json_data)
+        return jsonify(results)
 
 
 @ app.route('/grocery_lists', methods=['GET', 'POST'])
