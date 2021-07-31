@@ -65,7 +65,8 @@ export default function Users() {
     /*fetch users on load*/
     useEffect(() => {
         /*load the user's database info*/
-        fetch('http://0.0.0.0:5000/users')
+        // fetch('http://0.0.0.0:5000/users')
+        fetch('/users')
             .then(res => res.json())
             .then(res =>
                 setData([...res])
@@ -73,7 +74,8 @@ export default function Users() {
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
-        fetch('http://0.0.0.0:5000/users', {
+        // fetch('http://0.0.0.0:5000/users', {
+        fetch('/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +97,8 @@ export default function Users() {
     }
 
     const handleRowUpdate = (newData, oldData, resolve) => {
-        fetch('http://0.0.0.0:5000/users', {
+        // fetch('http://0.0.0.0:5000/users', {
+        fetch('/users', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -118,7 +121,8 @@ export default function Users() {
     }
 
     const handleRowDelete = (oldData, resolve) => {
-        fetch('http://0.0.0.0:5000/users', {
+        // fetch('http://0.0.0.0:5000/users', {
+        fetch('/users', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

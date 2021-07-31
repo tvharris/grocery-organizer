@@ -103,7 +103,8 @@ export default function UserIngredients() {
     useEffect(() => {
 
         // Use GET request to maintain RESTfulness of API
-        fetch(`http://0.0.0.0:5000/user_ingredients/${selectedUser}`)
+        // fetch(`http://0.0.0.0:5000/user_ingredients/${selectedUser}`)
+        fetch(`/user_ingredients/${selectedUser}`)
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data)
@@ -120,7 +121,8 @@ export default function UserIngredients() {
     /*fetch ingredients on load*/
     useEffect(() => {
         /*load the user's database info*/
-        fetch('http://0.0.0.0:5000/users')
+        // fetch('http://0.0.0.0:5000/users')
+        fetch('/users')
             .then(res => res.json())
             .then(res =>
                 setUsers([...res])

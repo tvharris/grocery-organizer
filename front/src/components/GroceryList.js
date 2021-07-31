@@ -57,7 +57,8 @@ export default function GroceryList() {
     /*fetch grocery_lists on load*/
     useEffect(() => {
         /*load the user's database info*/
-        fetch('http://0.0.0.0:5000/grocery_lists')
+        // fetch('http://0.0.0.0:5000/grocery_lists')
+        fetch('/grocery_lists')
             .then(res => res.json())
             .then(res =>
                 setData([...res])
