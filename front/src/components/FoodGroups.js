@@ -55,7 +55,6 @@ export default function FoodGroups() {
     /*fetch users on load*/
     useEffect(() => {
         /*load the user's database info*/
-        // fetch('http://0.0.0.0:5000/food_group')
         fetch('/food_group')
             .then(res => res.json())
             .then(res =>

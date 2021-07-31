@@ -64,8 +64,6 @@ export default function Ingredients() {
     /*fetch ingredients on load*/
     useEffect(() => {
         /*load the user's database info*/
-        // fetch('http://0.0.0.0:5000/ingredients')
-        // fetch('http://192.168.0.4:5000/ingredients')
         fetch('/ingredients')
             .then(res => res.json())
             .then(res =>
