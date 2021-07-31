@@ -166,6 +166,22 @@ def user_ingredients(user_id):
         return jsonify(results)
 
 
+# Route to provide the ingredients from a given grocery list
+@app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST'])
+def grocery_list_ingredients(listID):
+
+    # if we receive a get request we need to execute a get query and return
+    # all users from the DB as json.
+    if request.method == 'GET':
+        query = f"SELECT name, ingredientID from GroceryList_Ingredients \
+                JOIN Ingredients USING (ingredientID) \
+                WHERE GroceryList_Ingredients.listID = {listID}"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        print(jsonify(results))
+        return jsonify(results)
+
+
 @ app.route('/api', methods=['GET', 'POST'])
 def welcome():
     # return "Hello World!"

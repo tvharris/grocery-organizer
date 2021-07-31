@@ -63,7 +63,7 @@ export default function GroceryListIngredient() {
         {
             title: 'Ingredient',
             field: 'name',
-            lookup: { Carrots: 'Carrots', Cilantro: 'Cilantro', Milk: 'Milk' },
+            //lookup: { Carrots: 'Carrots', Cilantro: 'Cilantro', Milk: 'Milk' },
         },
     ]
     /*fetch grocery_lists on load*/
@@ -76,10 +76,7 @@ export default function GroceryListIngredient() {
             )
     }, [])
 
-    const [data, setData] = useState([
-        { id: 1, name: 'Carrots' },
-        { id: 2, name: 'Cilantro' },
-    ])
+    const [data, setData] = useState([])
 
     const handleRowAdd = (newData, resolve) => {
         let dataToAdd = [...data]
@@ -104,6 +101,15 @@ export default function GroceryListIngredient() {
         resolve()
     }
 
+    const loadUserGroceryList = (rowData) => {
+        console.log(rowData.listID)
+        fetch(`/grocery_list_ingredients/${rowData.listID}`)
+            .then(res => res.json())
+            .then(res =>
+                setData([...res])
+            )
+    };
+
     return (
         <div>
             <Container>
@@ -118,7 +124,7 @@ export default function GroceryListIngredient() {
                                 {
                                     icon: '>',
                                     onClick: (event, rowData) => {
-                                        console.log(rowData)
+                                        loadUserGroceryList(rowData)
                                     },
                                 },
                             ]}
