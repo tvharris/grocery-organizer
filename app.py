@@ -106,7 +106,7 @@ def users():
         return jsonify(results)
 
 
-@ app.route('/grocery_lists', methods=['GET', 'POST'])
+@ app.route('/grocery_lists', methods=['GET', 'POST', 'DELETE'])
 def grocery_lists():
 
     # if we receive a get request we need to execute a get query and return
@@ -117,8 +117,18 @@ def grocery_lists():
                  FROM GroceryLists JOIN Users USING (userID)"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        # return jsonify(results)
-        return(jsonify(results), 200)
+        return(jsonify(results))
+
+    if request.method == 'DELETE':
+        # extract data from request object
+        json_data = request.get_json()
+        listID = json_data['listID']
+
+        # execute SQL query
+        query = f"DELETE FROM GroceryLists WHERE listID = '{listID}';"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
 
 
 @ app.route('/ingredients', methods=['GET', 'POST'])

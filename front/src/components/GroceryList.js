@@ -47,8 +47,8 @@ const tableIcons = {
 export default function GroceryList() {
     var columns = [
         { title: 'id', field: 'listID', hidden: true },
-        { title: 'Username', field: 'username'},
-        { title: 'Date', field: 'listDate', type: 'date'},
+        { title: 'Username', field: 'username' },
+        { title: 'Date', field: 'listDate', type: 'date' },
     ]
 
     const [data, setData] = useState([])
@@ -62,7 +62,7 @@ export default function GroceryList() {
             .then(res =>
                 setData([...res])
             )
-    },[])
+    }, [])
 
     const handleRowAdd = (newData, resolve) => {
         let dataToAdd = [...data]
@@ -80,6 +80,21 @@ export default function GroceryList() {
     }
 
     const handleRowDelete = (oldData, resolve) => {
+        fetch('/grocery_lists', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(oldData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
         const dataDelete = [...data]
         const index = oldData.tableData.id
         dataDelete.splice(index, 1)
@@ -97,17 +112,17 @@ export default function GroceryList() {
                     icons={tableIcons}
                     editable={{
                         onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            handleRowUpdate(newData, oldData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowUpdate(newData, oldData, resolve)
+                            }),
                         onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            handleRowAdd(newData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowAdd(newData, resolve)
+                            }),
                         onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            handleRowDelete(oldData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowDelete(oldData, resolve)
+                            }),
                     }}
                 />
             </Container>
