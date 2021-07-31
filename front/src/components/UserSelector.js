@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -16,28 +16,26 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleSelect() {
-    const classes = useStyles();
-    const [user, setUser] = React.useState('No User Selected');
+export default function SimpleSelect({ users, selectedUser, setSelectedUser }) {
 
+    const classes = useStyles();
     const handleChange = (event) => {
-        setUser(event.target.value);
+        setSelectedUser(event.target.value);
     };
 
     return (
         <div>
-            <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Select User</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={user}
-                    onChange={handleChange}
-                >
-                    <MenuItem value={1}>john_doe</MenuItem>
-                    <MenuItem value={2}>jane_doe</MenuItem>
-                </Select>
-            </FormControl>
+        <FormControl className={classes.formControl}>
+        <InputLabel id="demo-simple-select-label">Select User</InputLabel>
+        <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={selectedUser}
+        onChange={handleChange}
+        >
+        {users.map((u) => (<MenuItem value={u.userID}>{u.username}</MenuItem>))}
+        </Select>
+        </FormControl>
         </div>
     );
 }
