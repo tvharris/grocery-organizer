@@ -77,7 +77,6 @@ def users():
                   VALUE ('{email}', '{username}');"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        print(jsonify(results))
         return jsonify(results)
 
     # DELETE ROUTE

@@ -117,9 +117,9 @@ export default function GroceryListIngredient() {
                             actions={[
                                 {
                                     icon: '>',
-                                        onClick: (event, rowData) => {
-                                            // Get ingredients for other table based on chosen list
-                                        },
+                                    onClick: (event, rowData) => {
+                                        console.log(rowData)
+                                    },
                                 },
                             ]}
                         />
@@ -132,17 +132,17 @@ export default function GroceryListIngredient() {
                             icons={tableIcons}
                             editable={{
                                 onRowUpdate: (newData, oldData) =>
-                                new Promise((resolve) => {
-                                    handleRowUpdate(newData, oldData, resolve)
-                                }),
+                                    new Promise((resolve) => {
+                                        handleRowUpdate(newData, oldData, resolve)
+                                    }),
                                 onRowAdd: (newData) =>
-                                new Promise((resolve) => {
-                                    handleRowAdd(newData, resolve)
-                                }),
+                                    new Promise((resolve) => {
+                                        handleRowAdd(newData, resolve)
+                                    }),
                                 onRowDelete: (oldData) =>
-                                new Promise((resolve) => {
-                                    handleRowDelete(oldData, resolve)
-                                }),
+                                    new Promise((resolve) => {
+                                        handleRowDelete(oldData, resolve)
+                                    }),
                             }}
                         />
                     </Grid>
