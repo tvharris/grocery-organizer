@@ -158,7 +158,7 @@ def ingredients():
         return jsonify(results)
 
 
-@ app.route('/food_group', methods=['GET', 'POST'])
+@ app.route('/food_group', methods=['GET', 'POST', 'DELETE'])
 def food_group():
 
     # if we receive a get request we need to execute a get query and return
@@ -170,6 +170,17 @@ def food_group():
         results = cursor.fetchall()
         # return jsonify(results)
         return(jsonify(results), 200)
+
+    if request.method == 'DELETE':
+        # extract data from request object
+        json_data = request.get_json()
+        foodGroupID = json_data['foodGroupID']
+
+        # execute SQL query
+        query = f"DELETE FROM FoodGroups WHERE foodGroupID = '{foodGroupID}';"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
 
 
 @app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
