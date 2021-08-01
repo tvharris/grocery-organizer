@@ -63,7 +63,7 @@ export default function GroceryListIngredient() {
         {
             title: 'Ingredient',
             field: 'name',
-            lookup: { Carrots: 'Carrots', Cilantro: 'Cilantro', Milk: 'Milk' },
+            //lookup: { Carrots: 'Carrots', Cilantro: 'Cilantro', Milk: 'Milk' },
         },
     ]
     /*fetch grocery_lists on load*/
@@ -76,10 +76,7 @@ export default function GroceryListIngredient() {
             )
     }, [])
 
-    const [data, setData] = useState([
-        { id: 1, name: 'Carrots' },
-        { id: 2, name: 'Cilantro' },
-    ])
+    const [data, setData] = useState([])
 
     const handleRowAdd = (newData, resolve) => {
         let dataToAdd = [...data]
@@ -104,6 +101,15 @@ export default function GroceryListIngredient() {
         resolve()
     }
 
+    const loadUserGroceryList = (rowData) => {
+        console.log(rowData.listID)
+        fetch(`/grocery_list_ingredients/${rowData.listID}`)
+            .then(res => res.json())
+            .then(res =>
+                setData([...res])
+            )
+    };
+
     return (
         <div>
             <Container>
@@ -117,9 +123,9 @@ export default function GroceryListIngredient() {
                             actions={[
                                 {
                                     icon: '>',
-                                        onClick: (event, rowData) => {
-                                            // Get ingredients for other table based on chosen list
-                                        },
+                                    onClick: (event, rowData) => {
+                                        loadUserGroceryList(rowData)
+                                    },
                                 },
                             ]}
                         />
@@ -132,17 +138,17 @@ export default function GroceryListIngredient() {
                             icons={tableIcons}
                             editable={{
                                 onRowUpdate: (newData, oldData) =>
-                                new Promise((resolve) => {
-                                    handleRowUpdate(newData, oldData, resolve)
-                                }),
+                                    new Promise((resolve) => {
+                                        handleRowUpdate(newData, oldData, resolve)
+                                    }),
                                 onRowAdd: (newData) =>
-                                new Promise((resolve) => {
-                                    handleRowAdd(newData, resolve)
-                                }),
+                                    new Promise((resolve) => {
+                                        handleRowAdd(newData, resolve)
+                                    }),
                                 onRowDelete: (oldData) =>
-                                new Promise((resolve) => {
-                                    handleRowDelete(oldData, resolve)
-                                }),
+                                    new Promise((resolve) => {
+                                        handleRowDelete(oldData, resolve)
+                                    }),
                             }}
                         />
                     </Grid>

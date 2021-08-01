@@ -77,6 +77,21 @@ export default function FoodGroups() {
     }
 
     const handleRowDelete = (oldData, resolve) => {
+        fetch('/food_group', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(oldData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
         const dataDelete = [...data]
         const index = oldData.tableData.id
         dataDelete.splice(index, 1)
@@ -94,17 +109,17 @@ export default function FoodGroups() {
                     icons={tableIcons}
                     editable={{
                         onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            handleRowUpdate(newData, oldData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowUpdate(newData, oldData, resolve)
+                            }),
                         onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            handleRowAdd(newData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowAdd(newData, resolve)
+                            }),
                         onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            handleRowDelete(oldData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowDelete(oldData, resolve)
+                            }),
                     }}
                 />
             </Container>

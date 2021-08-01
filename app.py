@@ -87,7 +87,7 @@ def users():
         return jsonify(results)
 
 
-@ app.route('/grocery_lists', methods=['GET', 'POST'])
+@ app.route('/grocery_lists', methods=['GET', 'POST', 'DELETE'])
 def grocery_lists():
 
     # if we receive a get request we need to execute a get query and return
@@ -103,8 +103,18 @@ def grocery_lists():
         db_connection.close()
         return(jsonify(results), 200)
 
+    if request.method == 'DELETE':
+        # extract data from request object
+        json_data = request.get_json()
+        listID = json_data['listID']
 
-@ app.route('/ingredients', methods=['GET', 'POST'])
+        # execute SQL query
+        query = f"DELETE FROM GroceryLists WHERE listID = '{listID}';"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
+
+@ app.route('/ingredients', methods=['GET', 'POST', 'DELETE'])
 def ingredients():
 
     # if we receive a get request we need to execute a get query and return
@@ -121,8 +131,19 @@ def ingredients():
         db_connection.close()
         return(jsonify(results), 200)
 
+    if request.method == 'DELETE':
+        # extract data from request object
+        json_data = request.get_json()
+        ingredientID = json_data['ingredientID']
 
-@ app.route('/food_group', methods=['GET', 'POST'])
+        # execute SQL query
+        query = f"DELETE FROM Ingredients WHERE ingredientID = '{ingredientID}';"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
+
+
+@ app.route('/food_group', methods=['GET', 'POST', 'DELETE'])
 def food_group():
 
     # if we receive a get request we need to execute a get query and return
@@ -136,6 +157,17 @@ def food_group():
         # return jsonify(results)
         db_connection.close()
         return(jsonify(results), 200)
+
+    if request.method == 'DELETE':
+        # extract data from request object
+        json_data = request.get_json()
+        foodGroupID = json_data['foodGroupID']
+
+        # execute SQL query
+        query = f"DELETE FROM FoodGroups WHERE foodGroupID = '{foodGroupID}';"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
 
 
 @app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
@@ -152,6 +184,22 @@ def user_ingredients(user_id):
         results = cursor.fetchall()
         print(jsonify(results))
         db_connection.close()
+        return jsonify(results)
+
+
+# Route to provide the ingredients from a given grocery list
+@app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST'])
+def grocery_list_ingredients(listID):
+
+    # if we receive a get request we need to execute a get query and return
+    # all users from the DB as json.
+    if request.method == 'GET':
+        query = f"SELECT name, ingredientID from GroceryList_Ingredients \
+                JOIN Ingredients USING (ingredientID) \
+                WHERE GroceryList_Ingredients.listID = {listID}"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        print(jsonify(results))
         return jsonify(results)
 
 

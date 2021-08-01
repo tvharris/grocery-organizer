@@ -52,6 +52,21 @@ export default function GroceryList() {
     }
 
     const handleRowDelete = (oldData, resolve) => {
+        fetch('/grocery_lists', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(oldData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
         const dataDelete = [...data]
         const index = oldData.tableData.id
         dataDelete.splice(index, 1)
