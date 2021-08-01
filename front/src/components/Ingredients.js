@@ -39,9 +39,26 @@ export default function Ingredients() {
         //.then(res => setFoodGroups([...res]))
     }, [])
 
-
-
     const handleRowAdd = (newData, resolve) => {
+        console.log(newData)
+        let ingredientData = { ingredientName: newData.name, foodGroup: newData.FoodGroups.name }
+        console.log(ingredientData)
+        fetch('ingredients', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ingredientData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
+        // update front-end state
         let dataToAdd = [...ingredients]
         dataToAdd.push(newData)
         setIngredients(dataToAdd)

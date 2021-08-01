@@ -142,7 +142,6 @@ def ingredients():
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
-
         query = "SELECT \
                  Ingredients.name, FoodGroups.name, Ingredients.ingredientID \
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID)"
@@ -151,13 +150,30 @@ def ingredients():
         db_connection.close()
         return(jsonify(results))
 
+    if request.method == 'POST':
+        json_data = request.get_json()
+        ingredientName = json_data['ingredientName']
+        foodGroup = json_data['foodGroup']
+
+        query = f"INSERT INTO Ingredients (name, foodGroupID) \
+                VALUE \
+                ('{ingredientName}', \
+                (SELECT foodGroupID from FoodGroups \
+                WHERE name='{foodGroup}'));"
+
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        db_connection.close()
+        return jsonify(results)
+
     if request.method == 'DELETE':
         # extract data from request object
         json_data = request.get_json()
         ingredientID = json_data['ingredientID']
 
         # execute SQL query
-        query = f"DELETE FROM Ingredients WHERE ingredientID = '{ingredientID}';"
+        query = f"DELETE FROM Ingredients \
+                WHERE ingredientID = '{ingredientID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         db_connection.close()
