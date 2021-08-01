@@ -25,18 +25,14 @@ const tableIcons = {
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
     Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
     Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-    DetailPanel: forwardRef((props, ref) => (
-        <ChevronRight {...props} ref={ref} />
-    )),
+    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
     Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
     FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
     LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
     NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => (
-        <ChevronLeft {...props} ref={ref} />
-    )),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
     ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
     Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
     SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
@@ -45,24 +41,37 @@ const tableIcons = {
 }
 
 export default function GroceryList() {
+    
+    // data for the grocery list table
+    const [data, setData] = useState([])
+    // data for the username lookup (i.e., dropdown)
+    const [userData, setUserData] = useState({})
+
     var columns = [
         { title: 'id', field: 'listID', hidden: true },
-        { title: 'Username', field: 'username'},
-        { title: 'Date', field: 'listDate', type: 'date'},
+        { title: 'Username', field: 'username', lookup: userData },
+        { title: 'Date', field: 'listDate', type: 'date' },
     ]
 
-    const [data, setData] = useState([])
+    // convert array of table rows to object for lookup - {username:username}
+    function arrayToObject(arr) {
+        let usernames = {}
+        for (let i = 0; i < arr.length; ++i)
+            usernames[arr[i].username] = arr[i].username
+        return usernames
+    }
 
-
-    /*fetch grocery_lists on load*/
+    // fetch grocery_lists and users on load
     useEffect(() => {
-        /*load the user's database info*/
+        // load the grocery list info
         fetch('/grocery_lists')
-            .then(res => res.json())
-            .then(res =>
-                setData([...res])
-            )
-    },[])
+            .then((res) => res.json())
+            .then((res) => setData([...res]))
+        // load the user info for the lookup (i.e., dropdown)
+        fetch('/users')
+            .then((res) => res.json())
+            .then((res) => setUserData(arrayToObject(res)))
+    }, [])
 
     const handleRowAdd = (newData, resolve) => {
         let dataToAdd = [...data]
@@ -97,17 +106,17 @@ export default function GroceryList() {
                     icons={tableIcons}
                     editable={{
                         onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            handleRowUpdate(newData, oldData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowUpdate(newData, oldData, resolve)
+                            }),
                         onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            handleRowAdd(newData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowAdd(newData, resolve)
+                            }),
                         onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            handleRowDelete(oldData, resolve)
-                        }),
+                            new Promise((resolve) => {
+                                handleRowDelete(oldData, resolve)
+                            }),
                     }}
                 />
             </Container>
