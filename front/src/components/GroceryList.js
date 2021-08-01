@@ -44,19 +44,13 @@ export default function GroceryList() {
             },
             body: JSON.stringify(newData),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data)
-            })
+            .then((res) => res.json())
+            // res is the added row, use it to update state
+            .then((res) => setData([...data, ...res]))
             .catch((error) => {
                 console.log('Error:', error)
             })
         
-        // update front-end state
-        let dataToAdd = [...data]
-        console.log('newdata: ', newData)
-        dataToAdd.push(newData)
-        setData(dataToAdd)
         resolve()
     }
 
@@ -105,6 +99,8 @@ export default function GroceryList() {
                             }),
                         onRowAdd: (newData) =>
                             new Promise((resolve) => {
+                                // let listDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                                // newData['listDate'] = listDate
                                 handleRowAdd(newData, resolve)
                             }),
                         onRowDelete: (oldData) =>
