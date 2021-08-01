@@ -36,7 +36,6 @@ def users():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
-        cursor.close()
         db_connection.close()
         return jsonify(results)
 
@@ -54,7 +53,6 @@ def users():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
-        cursor.close()
         db_connection.close()
         return jsonify(results)
 
@@ -69,7 +67,6 @@ def users():
         query = f"DELETE FROM Users WHERE userID = '{user_id}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        cursor.close()
         db_connection.close()
         return jsonify(results)
 
@@ -86,7 +83,6 @@ def users():
         query = f"UPDATE Users SET username = '{username}', email = '{email}' WHERE userID = '{userID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        cursor.close()
         db_connection.close()
         return jsonify(results)
 
@@ -104,7 +100,6 @@ def grocery_lists():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         # return jsonify(results)
-        cursor.close()
         db_connection.close()
         return(jsonify(results), 200)
 
@@ -123,7 +118,6 @@ def ingredients():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         # return jsonify(results)
-        cursor.close()
         db_connection.close()
         return(jsonify(results), 200)
 
@@ -140,7 +134,6 @@ def food_group():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         # return jsonify(results)
-        cursor.close()
         db_connection.close()
         return(jsonify(results), 200)
 
@@ -158,7 +151,6 @@ def user_ingredients(user_id):
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results))
-        cursor.close()
         db_connection.close()
         return jsonify(results)
 
