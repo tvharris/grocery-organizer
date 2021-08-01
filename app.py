@@ -5,12 +5,11 @@ import database.db_connector as db
 
 # Configuration
 app = Flask(__name__, static_folder='./front/build', static_url_path='/')
+
+# HAD TO CONNECT FOR EVERY ROUTE AND CLOSE AFTER EVERY REQUEST TO ALLOW MULTIPLE REQUESTS
 # db_connection = db.connect_to_database()
 
-
 # Routes
-
-
 @app.route('/')
 def root():
     # return render_template("main.j2")
@@ -101,6 +100,26 @@ def grocery_lists():
         # return jsonify(results)
         db_connection.close()
         return(jsonify(results), 200)
+
+    
+    if request.method == 'POST':
+        # extract data from request object
+        json_data = request.get_json()
+        username = json_data['username']
+        # listDate = json_data['listDate']
+
+        # execute SQL query
+        # query = f"INSERT INTO GroceryLists (userID) \
+        query = f"INSERT INTO GroceryLists (userID, listDate) \
+                  VALUE ((SELECT userID from Users WHERE username='{username}'), NOW());"
+                #   VALUE ((SELECT userID from Users WHERE username='{username}', '2020-01-01 10:10:10');"
+                #   VALUE ((SELECT userID from Users WHERE username='{username}', NOW());"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        print(jsonify(results), type(results), results)
+        db_connection.close()
+        return jsonify(results)
+
 
     if request.method == 'DELETE':
         # extract data from request object

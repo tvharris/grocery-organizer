@@ -4,7 +4,6 @@ import Container from '@material-ui/core/Container'
 import React, { useEffect } from 'react'
 
 export default function GroceryList() {
-    
     // data for the grocery list table
     const [data, setData] = useState([])
     // data for the username lookup (i.e., dropdown)
@@ -13,7 +12,8 @@ export default function GroceryList() {
     var columns = [
         { title: 'id', field: 'listID', hidden: true },
         { title: 'Username', field: 'username', lookup: userData },
-        { title: 'Date', field: 'listDate', type: 'date' },
+        // date is not editable because in the back-end we use the current datetime
+        { title: 'Date', field: 'listDate', type: 'date', editable: 'never' },
     ]
 
     // convert array of table rows to object for lookup - {username:username}
@@ -37,7 +37,24 @@ export default function GroceryList() {
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
+        fetch('/grocery_lists', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+        
+        // update front-end state
         let dataToAdd = [...data]
+        console.log('newdata: ', newData)
         dataToAdd.push(newData)
         setData(dataToAdd)
         resolve()
@@ -59,8 +76,8 @@ export default function GroceryList() {
             },
             body: JSON.stringify(oldData),
         })
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 console.log('Success:', data)
             })
             .catch((error) => {

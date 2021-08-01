@@ -25,7 +25,7 @@ SELECT username, listDate, listID FROM GroceryLists JOIN Users USING (userID);
 
 
  --- Add : 
-INSERT INTO GroceryLists (userID, listDate) VALUE ((SELECT userID from Users WHERE userID='[ID]'),NOW());
+INSERT INTO GroceryLists (userID, listDate) VALUE ((SELECT userID from Users WHERE username='[username]'),NOW());
 
  --- Delete : 
 DELETE FROM GroceryLists WHERE listID='[ID]';
