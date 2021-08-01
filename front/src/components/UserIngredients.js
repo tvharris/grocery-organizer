@@ -13,8 +13,6 @@ export default function UserIngredients() {
         },
     ]
 
-
-
     /*fetch user_ingredients on load*/
     //useEffect(() => {
     //[>load the user's database info<]
