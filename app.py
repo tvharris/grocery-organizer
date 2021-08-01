@@ -5,12 +5,11 @@ import database.db_connector as db
 
 # Configuration
 app = Flask(__name__, static_folder='./front/build', static_url_path='/')
+
+# HAD TO CONNECT FOR EVERY ROUTE AND CLOSE AFTER EVERY REQUEST TO ALLOW MULTIPLE REQUESTS
 # db_connection = db.connect_to_database()
 
-
 # Routes
-
-
 @app.route('/')
 def root():
     # return render_template("main.j2")
@@ -25,12 +24,13 @@ def not_found(e):
 
 @app.route('/users', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def users():
+    
+    db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
 
-        db_connection = db.connect_to_database()
         # execute SQL query
         query = "SELECT * FROM Users;"
         cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -41,7 +41,6 @@ def users():
 
     # POST ROUTE
     if request.method == 'POST':
-        db_connection = db.connect_to_database()
         # extract data from request object
         json_data = request.get_json()
         email = json_data['email']
@@ -58,7 +57,6 @@ def users():
 
     # DELETE ROUTE
     if request.method == 'DELETE':
-        db_connection = db.connect_to_database()
         # extract data from request object
         json_data = request.get_json()
         user_id = json_data['userID']
@@ -72,7 +70,6 @@ def users():
 
     # PUT ROUTE
     if request.method == 'PUT':
-        db_connection = db.connect_to_database()
         # extract data from request object
         json_data = request.get_json()
         email = json_data['email']
@@ -89,11 +86,12 @@ def users():
 
 @ app.route('/grocery_lists', methods=['GET', 'POST', 'DELETE'])
 def grocery_lists():
+    
+    db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
-        db_connection = db.connect_to_database()
 
         query = "SELECT username, listDate, listID \
                  FROM GroceryLists JOIN Users USING (userID)"
@@ -102,6 +100,26 @@ def grocery_lists():
         # return jsonify(results)
         db_connection.close()
         return(jsonify(results), 200)
+
+    
+    if request.method == 'POST':
+        # extract data from request object
+        json_data = request.get_json()
+        username = json_data['username']
+        # listDate = json_data['listDate']
+
+        # execute SQL query
+        # query = f"INSERT INTO GroceryLists (userID) \
+        query = f"INSERT INTO GroceryLists (userID, listDate) \
+                  VALUE ((SELECT userID from Users WHERE username='{username}'), NOW());"
+                #   VALUE ((SELECT userID from Users WHERE username='{username}', '2020-01-01 10:10:10');"
+                #   VALUE ((SELECT userID from Users WHERE username='{username}', NOW());"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        print(jsonify(results), type(results), results)
+        db_connection.close()
+        return jsonify(results)
+
 
     if request.method == 'DELETE':
         # extract data from request object
@@ -112,15 +130,17 @@ def grocery_lists():
         query = f"DELETE FROM GroceryLists WHERE listID = '{listID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
+        db_connection.close()
         return jsonify(results)
 
 @ app.route('/ingredients', methods=['GET', 'POST', 'DELETE'])
 def ingredients():
+    
+    db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
-        db_connection = db.connect_to_database()
 
         query = "SELECT \
                  Ingredients.name, FoodGroups.name, Ingredients.ingredientID \
@@ -140,16 +160,18 @@ def ingredients():
         query = f"DELETE FROM Ingredients WHERE ingredientID = '{ingredientID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
+        db_connection.close()
         return jsonify(results)
 
 
 @ app.route('/food_group', methods=['GET', 'POST', 'DELETE'])
 def food_group():
+    
+    db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
-        db_connection = db.connect_to_database()
 
         query = "SELECT name, foodGroupID FROM FoodGroups"
         cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -167,16 +189,18 @@ def food_group():
         query = f"DELETE FROM FoodGroups WHERE foodGroupID = '{foodGroupID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
+        db_connection.close()
         return jsonify(results)
 
 
 @app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
 def user_ingredients(user_id):
+    
+    db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
-        db_connection = db.connect_to_database()
         query = f"SELECT name from User_Ingredients \
                 JOIN Ingredients USING (ingredientID)\
                 WHERE User_Ingredients.userID = {user_id}"
@@ -190,6 +214,8 @@ def user_ingredients(user_id):
 # Route to provide the ingredients from a given grocery list
 @app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST'])
 def grocery_list_ingredients(listID):
+    
+    db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
@@ -200,17 +226,11 @@ def grocery_list_ingredients(listID):
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results))
+        db_connection.close()
         return jsonify(results)
 
 
-@ app.route('/api', methods=['GET', 'POST'])
-def welcome():
-    # return "Hello World!"
-    return jsonify(hello='world')
-
 # Listener
-
-
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 80))
     app.run(port=port, debug=False)  # debug option allows live changes
