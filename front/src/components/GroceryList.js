@@ -51,7 +51,7 @@ export default function GroceryList() {
             .catch((error) => {
                 console.log('Error:', error)
             })
-        
+
         // update front-end state
         let dataToAdd = [...data]
         console.log('newdata: ', newData)
