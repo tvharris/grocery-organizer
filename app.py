@@ -10,6 +10,8 @@ app = Flask(__name__, static_folder='./front/build', static_url_path='/')
 # db_connection = db.connect_to_database()
 
 # Routes
+
+
 @app.route('/')
 def root():
     # return render_template("main.j2")
@@ -24,7 +26,7 @@ def not_found(e):
 
 @app.route('/users', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def users():
-    
+
     db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
@@ -86,7 +88,7 @@ def users():
 
 @ app.route('/grocery_lists', methods=['GET', 'POST', 'DELETE'])
 def grocery_lists():
-    
+
     db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
@@ -101,7 +103,6 @@ def grocery_lists():
         db_connection.close()
         return(jsonify(results), 200)
 
-    
     if request.method == 'POST':
         # extract data from request object
         json_data = request.get_json()
@@ -109,10 +110,11 @@ def grocery_lists():
         # listDate = json_data['listDate']
 
         # execute SQL query
-        # query = f"INSERT INTO GroceryLists (userID) \
         query = f"INSERT INTO GroceryLists (userID, listDate) \
-                  VALUE ((SELECT userID from Users WHERE username='{username}'), NOW());"
-                #   VALUE ((SELECT userID from Users WHERE username='{username}'), '{listDate}');"
+            VALUE ((SELECT userID from Users \
+            WHERE username = '{username}'), NOW())"
+        #   VALUE ((SELECT userID from Users WHERE username='{username}', '2020-01-01 10:10:10');"
+        #   VALUE ((SELECT userID from Users WHERE username='{username}', NOW());"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         
         # get and return the row that was just added (most recent date)
@@ -126,7 +128,6 @@ def grocery_lists():
         db_connection.close()
         return jsonify(results)
 
-
     if request.method == 'DELETE':
         # extract data from request object
         json_data = request.get_json()
@@ -139,23 +140,38 @@ def grocery_lists():
         db_connection.close()
         return jsonify(results)
 
+
 @ app.route('/ingredients', methods=['GET', 'POST', 'DELETE'])
 def ingredients():
-    
+
     db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
-
         query = "SELECT \
                  Ingredients.name, FoodGroups.name, Ingredients.ingredientID \
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID)"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        # return jsonify(results)
         db_connection.close()
-        return(jsonify(results), 200)
+        return(jsonify(results))
+
+    if request.method == 'POST':
+        json_data = request.get_json()
+        ingredientName = json_data['ingredientName']
+        foodGroup = json_data['foodGroup']
+
+        query = f"INSERT INTO Ingredients (name, foodGroupID) \
+                VALUE \
+                ('{ingredientName}', \
+                (SELECT foodGroupID from FoodGroups \
+                WHERE name='{foodGroup}'));"
+
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        db_connection.close()
+        return jsonify(results)
 
     if request.method == 'DELETE':
         # extract data from request object
@@ -163,7 +179,8 @@ def ingredients():
         ingredientID = json_data['ingredientID']
 
         # execute SQL query
-        query = f"DELETE FROM Ingredients WHERE ingredientID = '{ingredientID}';"
+        query = f"DELETE FROM Ingredients \
+                WHERE ingredientID = '{ingredientID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         db_connection.close()
@@ -172,7 +189,7 @@ def ingredients():
 
 @ app.route('/food_group', methods=['GET', 'POST', 'DELETE'])
 def food_group():
-    
+
     db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
@@ -182,9 +199,8 @@ def food_group():
         query = "SELECT name, foodGroupID FROM FoodGroups"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        # return jsonify(results)
         db_connection.close()
-        return(jsonify(results), 200)
+        return(jsonify(results))
 
     if request.method == 'DELETE':
         # extract data from request object
@@ -199,9 +215,9 @@ def food_group():
         return jsonify(results)
 
 
-@app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
+@ app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
 def user_ingredients(user_id):
-    
+
     db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return
@@ -218,9 +234,9 @@ def user_ingredients(user_id):
 
 
 # Route to provide the ingredients from a given grocery list
-@app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST'])
+@ app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST'])
 def grocery_list_ingredients(listID):
-    
+
     db_connection = db.connect_to_database()
 
     # if we receive a get request we need to execute a get query and return

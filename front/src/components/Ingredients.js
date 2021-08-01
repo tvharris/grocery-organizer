@@ -4,45 +4,72 @@ import Container from '@material-ui/core/Container'
 import React, { useEffect } from 'react'
 
 export default function Ingredients() {
+
+    //Initiate State
+    const [ingredients, setIngredients] = useState([])
+    const [foodGroups, setFoodGroups] = useState({})
+
     var columns = [
-        { title: 'id', field: 'foodGroupID', hidden: true },
         { title: 'Ingredient', field: 'name' },
-        {
-            title: 'Food Group',
-            field: 'FoodGroups.name',
-
-            // Will need to fix this to add dropdown working - format {foodGroupID: Name}
-            // Probably a case for state.
-
-            //lookup: { Vegetable: 'Vegetable', Dairy: 'Dairy' },
-        },
+        { title: 'id', field: 'ingredientID', hidden: true },
+        { title: 'Food Group', field: 'FoodGroups.name', lookup: foodGroups },
     ]
 
-    const [data, setData] = useState([])
+
+    // convert array of table rows to object for lookup - {foodGroupID:name}
+    function arrayToObject(arr) {
+        let foodGroups = {}
+        for (let i = 0; i < arr.length; ++i)
+            foodGroups[arr[i].name] = arr[i].name
+        return foodGroups
+    }
 
     /*fetch ingredients on load*/
     useEffect(() => {
+
         /*load the user's database info*/
         fetch('/ingredients')
             .then(res => res.json())
-            .then(res =>
-                setData([...res])
-            )
-        console.log(data)
+            .then(res => setIngredients([...res]))
+
+        //load the foodGroups
+        fetch('/food_group')
+            .then((res) => res.json())
+            .then((res) => setFoodGroups(arrayToObject(res)))
+        //.then(res => setFoodGroups([...res]))
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
-        let dataToAdd = [...data]
+        console.log(newData)
+        let ingredientData = { ingredientName: newData.name, foodGroup: newData.FoodGroups.name }
+        console.log(ingredientData)
+        fetch('ingredients', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ingredientData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
+        // update front-end state
+        let dataToAdd = [...ingredients]
         dataToAdd.push(newData)
-        setData(dataToAdd)
+        setIngredients(dataToAdd)
         resolve()
     }
 
     const handleRowUpdate = (newData, oldData, resolve) => {
-        const dataUpdate = [...data]
+        const dataUpdate = [...ingredients]
         const index = oldData.tableData.id
         dataUpdate[index] = newData
-        setData([...dataUpdate])
+        setIngredients([...dataUpdate])
         resolve()
     }
 
@@ -62,10 +89,10 @@ export default function Ingredients() {
                 console.log('Error:', error)
             })
 
-        const dataDelete = [...data]
+        const dataDelete = [...ingredients]
         const index = oldData.tableData.id
         dataDelete.splice(index, 1)
-        setData([...dataDelete])
+        setIngredients([...dataDelete])
         resolve()
     }
     return (
@@ -74,7 +101,7 @@ export default function Ingredients() {
                 <MaterialTable
                     title='Ingredients'
                     columns={columns}
-                    data={data}
+                    data={ingredients}
                     editable={{
                         onRowUpdate: (newData, oldData) =>
                             new Promise((resolve) => {
