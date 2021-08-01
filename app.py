@@ -112,9 +112,15 @@ def grocery_lists():
         # query = f"INSERT INTO GroceryLists (userID) \
         query = f"INSERT INTO GroceryLists (userID, listDate) \
                   VALUE ((SELECT userID from Users WHERE username='{username}'), NOW());"
-                #   VALUE ((SELECT userID from Users WHERE username='{username}', '2020-01-01 10:10:10');"
-                #   VALUE ((SELECT userID from Users WHERE username='{username}', NOW());"
+                #   VALUE ((SELECT userID from Users WHERE username='{username}'), '{listDate}');"
         cursor = db.execute_query(db_connection=db_connection, query=query)
+        
+        # get and return the row that was just added (most recent date)
+        query2 = "SELECT username, listDate, listID \
+                 FROM GroceryLists JOIN Users USING (userID) \
+                 ORDER BY listDate DESC LIMIT 1"
+        cursor = db.execute_query(db_connection=db_connection, query=query2)
+
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
         db_connection.close()

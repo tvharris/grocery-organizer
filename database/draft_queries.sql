@@ -26,6 +26,10 @@ SELECT username, listDate, listID FROM GroceryLists JOIN Users USING (userID);
 
  --- Add : 
 INSERT INTO GroceryLists (userID, listDate) VALUE ((SELECT userID from Users WHERE username='[username]'),NOW());
+  --- After insert, select the added row (most recent date)
+  --- This is necessary to return the date to the front-end
+  SELECT username, listDate, listID FROM GroceryLists 
+  JOIN Users USING (userID) ORDER BY listDate DESC LIMIT 1;
 
  --- Delete : 
 DELETE FROM GroceryLists WHERE listID='[ID]';
