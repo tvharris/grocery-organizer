@@ -40,10 +40,8 @@ export default function Ingredients() {
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
-        console.log(newData)
         let ingredientData = { ingredientName: newData.name, foodGroup: newData.FoodGroups.name }
-        console.log(ingredientData)
-        fetch('ingredients', {
+        fetch('/ingredients', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -66,10 +64,25 @@ export default function Ingredients() {
     }
 
     const handleRowUpdate = (newData, oldData, resolve) => {
-        const dataUpdate = [...ingredients]
-        const index = oldData.tableData.id
-        dataUpdate[index] = newData
-        setIngredients([...dataUpdate])
+        fetch('/ingredients', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newData),
+        })
+            .then(data => data.json())
+            .then(data => {
+                console.log('Success:', data)
+                const ingredientUpate = [...ingredients]
+                const index = oldData.tableData.id
+                ingredientUpate[index] = newData
+                setIngredients([...ingredientUpate])
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
         resolve()
     }
 

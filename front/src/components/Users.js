@@ -91,7 +91,6 @@ export default function Users() {
             .catch((error) => {
                 console.log('Error:', error)
             })
-
         const dataDelete = [...data]
         const index = oldData.tableData.id
         dataDelete.splice(index, 1)
@@ -101,27 +100,27 @@ export default function Users() {
 
     return (
         <div>
-        <Container maxWidth='sm'>
-        <MaterialTable
-        title='Users'
-        columns={columns}
-        data={data}
-        editable={{
-            onRowUpdate: (newData, oldData) =>
-                new Promise((resolve) => {
-                    handleRowUpdate(newData, oldData, resolve)
-                }),
-                    onRowAdd: (newData) =>
-                new Promise((resolve) => {
-                    handleRowAdd(newData, resolve)
-                }),
-                    onRowDelete: (oldData) =>
-                new Promise((resolve) => {
-                    handleRowDelete(oldData, resolve)
-                }),
-        }}
-        />
-        </Container>
+            <Container maxWidth='sm'>
+                <MaterialTable
+                    title='Users'
+                    columns={columns}
+                    data={data}
+                    editable={{
+                        onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve) => {
+                                handleRowUpdate(newData, oldData, resolve)
+                            }),
+                        onRowAdd: (newData) =>
+                            new Promise((resolve) => {
+                                handleRowAdd(newData, resolve)
+                            }),
+                        onRowDelete: (oldData) =>
+                            new Promise((resolve) => {
+                                handleRowDelete(oldData, resolve)
+                            }),
+                    }}
+                />
+            </Container>
         </div>
     )
 }

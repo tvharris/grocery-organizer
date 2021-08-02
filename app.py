@@ -141,7 +141,7 @@ def grocery_lists():
         return jsonify(results)
 
 
-@ app.route('/ingredients', methods=['GET', 'POST', 'DELETE'])
+@ app.route('/ingredients', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def ingredients():
 
     db_connection = db.connect_to_database()
@@ -160,13 +160,32 @@ def ingredients():
     if request.method == 'POST':
         json_data = request.get_json()
         ingredientName = json_data['ingredientName']
-        foodGroup = json_data['foodGroup']
+        foodGroupName = json_data['foodGroup']
 
         query = f"INSERT INTO Ingredients (name, foodGroupID) \
                 VALUE \
                 ('{ingredientName}', \
                 (SELECT foodGroupID from FoodGroups \
-                WHERE name='{foodGroup}'));"
+                WHERE name='{foodGroupName}'));"
+
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        db_connection.close()
+        return jsonify(results)
+
+    if request.method == 'PUT':
+        json_data = request.get_json()
+        # let ingredientData = { ingredientID: newData.ingredientID,
+        # ingredientName: newData.name, foodGroup: newData.FoodGroups.name }
+        ingredientName = json_data['name']
+        foodGroupName = json_data['FoodGroups.name']
+        ingredientID = json_data['ingredientID']
+
+        query = f"UPDATE Ingredients \
+        SET \
+        foodGroupID=(SELECT foodGroupID from FoodGroups WHERE name='{foodGroupName}'),\
+        name='{ingredientName}' \
+        WHERE ingredientID = '{ingredientID}'"
 
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
@@ -178,7 +197,6 @@ def ingredients():
         json_data = request.get_json()
         ingredientID = json_data['ingredientID']
 
-        # execute SQL query
         query = f"DELETE FROM Ingredients \
                 WHERE ingredientID = '{ingredientID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
