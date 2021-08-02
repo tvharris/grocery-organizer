@@ -42,14 +42,6 @@ export default function GroceryListIngredient() {
         resolve()
     }
 
-    const handleRowUpdate = (newData, oldData, resolve) => {
-        const dataUpdate = [...data]
-        const index = oldData.tableData.id
-        dataUpdate[index] = newData
-        setData([...dataUpdate])
-        resolve()
-    }
-
     const handleRowDelete = (oldData, resolve) => {
         const dataDelete = [...data]
         const index = oldData.tableData.id
@@ -100,10 +92,6 @@ export default function GroceryListIngredient() {
                             columns={columns}
                             data={data}
                             editable={{
-                                onRowUpdate: (newData, oldData) =>
-                                    new Promise((resolve) => {
-                                        handleRowUpdate(newData, oldData, resolve)
-                                    }),
                                 onRowAdd: (newData) =>
                                     new Promise((resolve) => {
                                         handleRowAdd(newData, resolve)

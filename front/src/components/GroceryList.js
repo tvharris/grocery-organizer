@@ -51,19 +51,6 @@ export default function GroceryList() {
                 console.log('Error:', error)
             })
 
-        // update front-end state
-        let dataToAdd = [...data]
-        console.log('newdata: ', newData)
-        dataToAdd.push(newData)
-        setData(dataToAdd)
-        resolve()
-    }
-
-    const handleRowUpdate = (newData, oldData, resolve) => {
-        const dataUpdate = [...data]
-        const index = oldData.tableData.id
-        dataUpdate[index] = newData
-        setData([...dataUpdate])
         resolve()
     }
 
@@ -98,11 +85,7 @@ export default function GroceryList() {
                     columns={columns}
                     data={data}
                     editable={{
-                        onRowUpdate: (newData, oldData) =>
-                            new Promise((resolve) => {
-                                handleRowUpdate(newData, oldData, resolve)
-                            }),
-                        onRowAdd: (newData) =>
+                       onRowAdd: (newData) =>
                             new Promise((resolve) => {
                                 // let listDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
                                 // newData['listDate'] = listDate
