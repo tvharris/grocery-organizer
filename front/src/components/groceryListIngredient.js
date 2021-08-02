@@ -29,10 +29,8 @@ export default function GroceryListIngredient() {
     useEffect(() => {
         /*load the user's database info*/
         fetch('/grocery_lists')
-            .then(res => res.json())
-            .then(res =>
-                setGroceryListData([...res])
-            )
+            .then((res) => res.json())
+            .then((res) => setGroceryListData([...res]))
     }, [])
 
     const [data, setData] = useState([])
@@ -63,15 +61,23 @@ export default function GroceryListIngredient() {
     const loadUserGroceryList = (rowData) => {
         console.log(rowData.listID)
         fetch(`/grocery_list_ingredients/${rowData.listID}`)
-            .then(res => res.json())
-            .then(res =>
-                setData([...res])
-            )
-    };
+            .then((res) => res.json())
+            .then((res) => setData([...res]))
+    }
 
     return (
         <div>
             <Container>
+                <h6
+                    class='MuiTypography-h6'
+                    style={{
+                        marginTop: 0,
+                        marginBottom: '1.5rem',
+                        textAlign: 'center',
+                    }}
+                >
+                    Select a Grocery List to View Its Ingredients
+                </h6>
                 <Grid container spacing={3}>
                     <Grid item xs={6}>
                         <MaterialTable
