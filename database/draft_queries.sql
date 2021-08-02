@@ -69,7 +69,7 @@ SELECT name, foodGroupID FROM FoodGroups;
 INSERT INTO FoodGroups (name) VALUE ([INPUT]);
 
  --- Edit : 
-UPDATE FoodGroups SET name WHERE foodGroupID='[ID]' ;
+UPDATE FoodGroups SET name='[INPUT]' WHERE foodGroupID='[ID]' ;
 
  --- Delete : 
 DELETE FROM FoodGroups WHERE foodGroupID='[ID]';

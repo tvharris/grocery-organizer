@@ -20,7 +20,23 @@ export default function FoodGroups() {
                 setData(res)
             )
     }, [])
+
     const handleRowAdd = (newData, resolve) => {
+        fetch('/food_group', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
         let dataToAdd = [...data]
         dataToAdd.push(newData)
         setData(dataToAdd)
@@ -28,6 +44,21 @@ export default function FoodGroups() {
     }
 
     const handleRowUpdate = (newData, oldData, resolve) => {
+        fetch('/food_group', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+            })
+
         const dataUpdate = [...data]
         const index = oldData.tableData.id
         dataUpdate[index] = newData
