@@ -29,10 +29,8 @@ export default function GroceryListIngredient() {
     useEffect(() => {
         /*load the user's database info*/
         fetch('/grocery_lists')
-            .then(res => res.json())
-            .then(res =>
-                setGroceryListData([...res])
-            )
+            .then((res) => res.json())
+            .then((res) => setGroceryListData(res))
     }, [])
 
     const [data, setData] = useState([])
@@ -41,14 +39,6 @@ export default function GroceryListIngredient() {
         let dataToAdd = [...data]
         dataToAdd.push(newData)
         setData(dataToAdd)
-        resolve()
-    }
-
-    const handleRowUpdate = (newData, oldData, resolve) => {
-        const dataUpdate = [...data]
-        const index = oldData.tableData.id
-        dataUpdate[index] = newData
-        setData([...dataUpdate])
         resolve()
     }
 
@@ -63,15 +53,23 @@ export default function GroceryListIngredient() {
     const loadUserGroceryList = (rowData) => {
         console.log(rowData.listID)
         fetch(`/grocery_list_ingredients/${rowData.listID}`)
-            .then(res => res.json())
-            .then(res =>
-                setData([...res])
-            )
-    };
+            .then((res) => res.json())
+            .then((res) => setData([...res]))
+    }
 
     return (
         <div>
             <Container>
+                <h6
+                    class='MuiTypography-h6'
+                    style={{
+                        marginTop: 0,
+                        marginBottom: '1.5rem',
+                        textAlign: 'center',
+                    }}
+                >
+                    Select a Grocery List to View Its Ingredients
+                </h6>
                 <Grid container spacing={3}>
                     <Grid item xs={6}>
                         <MaterialTable
@@ -94,10 +92,6 @@ export default function GroceryListIngredient() {
                             columns={columns}
                             data={data}
                             editable={{
-                                onRowUpdate: (newData, oldData) =>
-                                    new Promise((resolve) => {
-                                        handleRowUpdate(newData, oldData, resolve)
-                                    }),
                                 onRowAdd: (newData) =>
                                     new Promise((resolve) => {
                                         handleRowAdd(newData, resolve)

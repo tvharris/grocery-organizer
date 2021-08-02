@@ -30,7 +30,7 @@ export default function Ingredients() {
         /*load the user's database info*/
         fetch('/ingredients')
             .then(res => res.json())
-            .then(res => setIngredients([...res]))
+            .then(res => setIngredients(res))
 
         //load the foodGroups
         fetch('/food_group')

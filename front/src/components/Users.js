@@ -27,7 +27,7 @@ export default function Users() {
         fetch('/users')
             .then(res => res.json())
             .then(res =>
-                setData([...res])
+                setData(res)
             )
     }, [])
 

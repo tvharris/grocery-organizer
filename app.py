@@ -205,7 +205,7 @@ def ingredients():
         return jsonify(results)
 
 
-@ app.route('/food_group', methods=['GET', 'POST', 'DELETE'])
+@ app.route('/food_group', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def food_group():
 
     db_connection = db.connect_to_database()
@@ -220,6 +220,20 @@ def food_group():
         db_connection.close()
         return(jsonify(results))
 
+    # POST ROUTE
+    if request.method == 'POST':
+        # extract data from request object
+        json_data = request.get_json()
+        name = json_data['name']
+
+        # execute SQL query
+        query = f"INSERT INTO FoodGroups (name) VALUE ('{name}');"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        print(jsonify(results), type(results), results)
+        db_connection.close()
+        return jsonify(results)
+
     if request.method == 'DELETE':
         # extract data from request object
         json_data = request.get_json()
@@ -232,6 +246,19 @@ def food_group():
         db_connection.close()
         return jsonify(results)
 
+    # PUT ROUTE
+    if request.method == 'PUT':
+        # extract data from request object
+        json_data = request.get_json()
+        foodGroupID = json_data['foodGroupID']
+        name = json_data['name']
+
+        # execute SQL query
+        query = f"UPDATE FoodGroups SET name = '{name}' WHERE foodGroupID = '{foodGroupID}';"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        db_connection.close()
+        return jsonify(results)
 
 @ app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
 def user_ingredients(user_id):
