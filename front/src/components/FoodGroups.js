@@ -17,7 +17,7 @@ export default function FoodGroups() {
         fetch('/food_group')
             .then(res => res.json())
             .then(res =>
-                setData([...res])
+                setData(res)
             )
     }, [])
     const handleRowAdd = (newData, resolve) => {

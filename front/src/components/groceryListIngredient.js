@@ -30,7 +30,7 @@ export default function GroceryListIngredient() {
         /*load the user's database info*/
         fetch('/grocery_lists')
             .then((res) => res.json())
-            .then((res) => setGroceryListData([...res]))
+            .then((res) => setGroceryListData(res))
     }, [])
 
     const [data, setData] = useState([])

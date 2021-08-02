@@ -73,7 +73,7 @@ export default function UserIngredients() {
         /*load the user's database info*/
         fetch('/users')
             .then((res) => res.json())
-            .then((res) => setUsers([...res]))
+            .then((res) => setUsers(res))
     }, [])
 
     return (

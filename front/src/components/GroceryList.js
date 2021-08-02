@@ -29,7 +29,7 @@ export default function GroceryList() {
         // load the grocery list info
         fetch('/grocery_lists')
             .then((res) => res.json())
-            .then((res) => setData([...res]))
+            .then((res) => setData(res))
         // load the user info for the lookup (i.e., dropdown)
         fetch('/users')
             .then((res) => res.json())
