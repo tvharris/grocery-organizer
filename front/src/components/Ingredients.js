@@ -16,11 +16,12 @@ export default function Ingredients() {
     ]
 
 
-    // convert array of table rows to object for lookup - {foodGroupID:name}
+    // convert array of table rows to object for lookup - {name:name}
     function arrayToObject(arr) {
         let foodGroups = {}
-        for (let i = 0; i < arr.length; ++i)
-            foodGroups[arr[i].name] = arr[i].name
+        arr.forEach((row) => {
+            foodGroups[row.name] = row.name
+        })
         return foodGroups
     }
 
