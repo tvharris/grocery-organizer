@@ -27,22 +27,27 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(newData),
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
             .then((dbRow) => {
                 console.log('Success:', dbRow)
 
                 // newData is an object, e.g., {name: 'vegetable'}, which
-                // also has the material-table row
+                // also has the material-table row index
                 // dbRow is the added row returned from the db, e.g., [{foodGroupID: 17, name: 'vegetable'}]
                 // add the ID from the dbRow to newData and update the table
                 newData['foodGroupID'] = dbRow[0]['foodGroupID']
-                let tableData = [...data]
-                tableData.push(newData)
-                setData(tableData)
+                let rows = [...data]
+                rows.push(newData)
+                setData(rows)
                 resolve()
             })
             .catch((error) => {
-                console.log('Error:', error)
+                console.log(error)
                 resolve()
             })
     }
@@ -55,19 +60,23 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(newData),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+            })
+            .then(() => {
+                console.log('Success')
+                const rows = [...data]
+                const index = oldData.tableData.id
+                rows[index] = newData
+                setData([...rows])
+                resolve()
             })
             .catch((error) => {
-                console.log('Error:', error)
+                console.log(error)
+                resolve()
             })
-
-        const dataUpdate = [...data]
-        const index = oldData.tableData.id
-        dataUpdate[index] = newData
-        setData([...dataUpdate])
-        resolve()
     }
 
     const handleRowDelete = (oldData, resolve) => {
@@ -78,19 +87,23 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(oldData),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+            })
+            .then(() => {
+                console.log('Success')
+                const rows = [...data]
+                const index = oldData.tableData.id
+                rows.splice(index, 1)
+                setData([...rows])
+                resolve()
             })
             .catch((error) => {
-                console.log('Error:', error)
+                console.log(error)
+                resolve()
             })
-
-        const dataDelete = [...data]
-        const index = oldData.tableData.id
-        dataDelete.splice(index, 1)
-        setData([...dataDelete])
-        resolve()
     }
 
     return (
