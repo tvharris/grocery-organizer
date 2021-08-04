@@ -1,7 +1,6 @@
 import MaterialTable from 'material-table'
-import { useState } from 'react'
 import Container from '@material-ui/core/Container'
-import React, { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function FoodGroups() {
     var columns = [
@@ -9,11 +8,11 @@ export default function FoodGroups() {
         { title: 'Food Group', field: 'name' },
     ]
 
+    // initialize state variable and update fnction for table data
     const [data, setData] = useState([])
 
-    /*fetch users on load*/
+    // fetch data from db on component load
     useEffect(() => {
-        /*load the user's database info*/
         fetch('/food_group')
             .then((res) => res.json())
             .then((res) => setData(res))
@@ -39,7 +38,7 @@ export default function FoodGroups() {
                 // newData is an object, e.g., {name: 'vegetable'}, which
                 // also has the material-table row index
                 // dbRow is the added row returned from the db, e.g., [{foodGroupID: 17, name: 'vegetable'}]
-                // add the ID from the dbRow to newData and update the table
+                // add the ID from the dbRow to newData and update the table in the front-end
                 newData['foodGroupID'] = dbRow[0]['foodGroupID']
                 let rows = [...data]
                 rows.push(newData)
@@ -67,10 +66,11 @@ export default function FoodGroups() {
             })
             .then(() => {
                 console.log('Success')
+                // update the table in the front-end
                 const rows = [...data]
                 const index = oldData.tableData.id
                 rows[index] = newData
-                setData([...rows])
+                setData(rows)
                 resolve()
             })
             .catch((error) => {
@@ -94,10 +94,11 @@ export default function FoodGroups() {
             })
             .then(() => {
                 console.log('Success')
+                // update the table in the front-end
                 const rows = [...data]
                 const index = oldData.tableData.id
                 rows.splice(index, 1)
-                setData([...rows])
+                setData(rows)
                 resolve()
             })
             .catch((error) => {

@@ -1,7 +1,6 @@
 import MaterialTable from 'material-table'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Container from '@material-ui/core/Container'
-import React, { useEffect } from 'react'
 
 export default function GroceryLists() {
     // data for the grocery list table
