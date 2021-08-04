@@ -11,8 +11,8 @@ import Users from './components/Users'
 import GroceryList from './components/GroceryList'
 import Ingredients from './components/Ingredients'
 import FoodGroups from './components/FoodGroups'
-import User_Ingredients from './components/UserIngredients'
-import GroceryList_Ingredients from './components/groceryListIngredient'
+import UserIngredients from './components/UserIngredients'
+import GroceryListIngredients from './components/GroceryListIngredient'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -92,10 +92,10 @@ export default function SimpleTabs() {
                 <FoodGroups/>
             </TabPanel>
             <TabPanel value={value} index={4}>
-                <User_Ingredients />
+                <UserIngredients />
             </TabPanel>
             <TabPanel value={value} index={5}>
-                <GroceryList_Ingredients />
+                <GroceryListIngredients />
             </TabPanel>
         </div>
     )
