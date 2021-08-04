@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Container from '@material-ui/core/Container'
 import React, { useEffect } from 'react'
 
-export default function GroceryList() {
+export default function GroceryLists() {
     // data for the grocery list table
     const [data, setData] = useState([])
     // data for the username lookup (i.e., dropdown)
