@@ -226,8 +226,13 @@ def food_group():
         json_data = request.get_json()
         name = json_data['name']
 
-        # execute SQL query
+        # execute INSERT
         query = f"INSERT INTO FoodGroups (name) VALUE ('{name}');"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+
+        # return the inserted row
+        query = "SELECT * FROM FoodGroups WHERE \
+                foodGroupID = (SELECT MAX(foodGroupID) FROM FoodGroups);"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)

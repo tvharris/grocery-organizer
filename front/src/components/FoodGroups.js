@@ -15,10 +15,8 @@ export default function FoodGroups() {
     useEffect(() => {
         /*load the user's database info*/
         fetch('/food_group')
-            .then(res => res.json())
-            .then(res =>
-                setData(res)
-            )
+            .then((res) => res.json())
+            .then((res) => setData(res))
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
@@ -29,18 +27,24 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(newData),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then((response) => response.json())
+            .then((dbRow) => {
+                console.log('Success:', dbRow)
+
+                // newData is an object, e.g., {name: 'vegetable'}, which
+                // also has the material-table row
+                // dbRow is the added row returned from the db, e.g., [{foodGroupID: 17, name: 'vegetable'}]
+                // add the ID from the dbRow to newData and update the table
+                newData['foodGroupID'] = dbRow[0]['foodGroupID']
+                let tableData = [...data]
+                tableData.push(newData)
+                setData(tableData)
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
-
-        let dataToAdd = [...data]
-        dataToAdd.push(newData)
-        setData(dataToAdd)
-        resolve()
     }
 
     const handleRowUpdate = (newData, oldData, resolve) => {
@@ -51,8 +55,8 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(newData),
         })
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 console.log('Success:', data)
             })
             .catch((error) => {
@@ -74,8 +78,8 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(oldData),
         })
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 console.log('Success:', data)
             })
             .catch((error) => {
