@@ -38,7 +38,6 @@ def users():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
-        db_connection.close()
         return jsonify(results)
 
     # POST ROUTE
@@ -54,7 +53,6 @@ def users():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
-        db_connection.close()
         return jsonify(results)
 
     # DELETE ROUTE
@@ -67,7 +65,6 @@ def users():
         query = f"DELETE FROM Users WHERE userID = '{user_id}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return jsonify(results)
 
     # PUT ROUTE
@@ -82,7 +79,6 @@ def users():
         query = f"UPDATE Users SET username = '{username}', email = '{email}' WHERE userID = '{userID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return jsonify(results)
 
 
@@ -100,7 +96,6 @@ def grocery_lists():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         # return jsonify(results)
-        db_connection.close()
         return(jsonify(results), 200)
 
     if request.method == 'POST':
@@ -113,8 +108,6 @@ def grocery_lists():
         query = f"INSERT INTO GroceryLists (userID, listDate) \
             VALUE ((SELECT userID from Users \
             WHERE username = '{username}'), NOW())"
-        #   VALUE ((SELECT userID from Users WHERE username='{username}', '2020-01-01 10:10:10');"
-        #   VALUE ((SELECT userID from Users WHERE username='{username}', NOW());"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         
         # get and return the row that was just added (most recent date)
@@ -125,7 +118,6 @@ def grocery_lists():
 
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
-        db_connection.close()
         return jsonify(results)
 
     if request.method == 'DELETE':
@@ -137,7 +129,6 @@ def grocery_lists():
         query = f"DELETE FROM GroceryLists WHERE listID = '{listID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return jsonify(results)
 
 
@@ -154,7 +145,6 @@ def ingredients():
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID)"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return(jsonify(results))
 
     if request.method == 'POST':
@@ -170,7 +160,6 @@ def ingredients():
 
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return jsonify(results)
 
     if request.method == 'PUT':
@@ -189,7 +178,6 @@ def ingredients():
 
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return jsonify(results)
 
     if request.method == 'DELETE':
@@ -201,7 +189,6 @@ def ingredients():
                 WHERE ingredientID = '{ingredientID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return jsonify(results)
 
 
@@ -217,7 +204,6 @@ def food_group():
         query = "SELECT name, foodGroupID FROM FoodGroups"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return(jsonify(results))
 
     # POST ROUTE
@@ -236,7 +222,6 @@ def food_group():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
-        db_connection.close()
         return jsonify(results)
 
     if request.method == 'DELETE':
@@ -248,7 +233,6 @@ def food_group():
         query = f"DELETE FROM FoodGroups WHERE foodGroupID = '{foodGroupID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return jsonify(results)
 
     # PUT ROUTE
@@ -262,7 +246,6 @@ def food_group():
         query = f"UPDATE FoodGroups SET name = '{name}' WHERE foodGroupID = '{foodGroupID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        db_connection.close()
         return jsonify(results)
 
 @ app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
@@ -279,7 +262,6 @@ def user_ingredients(user_id):
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results))
-        db_connection.close()
         return jsonify(results)
 
 
@@ -298,7 +280,6 @@ def grocery_list_ingredients(listID):
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results))
-        db_connection.close()
         return jsonify(results)
 
 
