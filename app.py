@@ -293,7 +293,7 @@ def user_ingredients(user_id):
 
 
 # Route to provide the ingredients from a given grocery list
-@ app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST'])
+@ app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST', 'DELETE'])
 def grocery_list_ingredients(listID):
 
     db_connection = db.connect_to_database()
@@ -325,6 +325,18 @@ def grocery_list_ingredients(listID):
         query = f"SELECT name, ingredientID from GroceryList_Ingredients \
                 JOIN Ingredients USING (ingredientID) \
                 WHERE GroceryList_Ingredients.listID = {listID}"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
+
+    if request.method == 'DELETE':
+        json_data = request.get_json()
+        name = json_data['name']
+        query = f"DELETE FROM GroceryList_Ingredients \
+                WHERE ingredientID=\
+                (SELECT ingredientID from Ingredients WHERE name='{name}')\
+                AND listID = '{listID}';"
+
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         return jsonify(results)

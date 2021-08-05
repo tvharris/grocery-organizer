@@ -82,11 +82,32 @@ export default function GroceryListIngredients() {
     }
 
     const handleRowDelete = (oldData, resolve) => {
-        const dataDelete = [...data]
-        const index = oldData.tableData.id
-        dataDelete.splice(index, 1)
-        setData([...dataDelete])
-        resolve()
+        fetch(`/grocery_list_ingredients/${selectedList}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(oldData),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
+            .then(() => {
+                console.log('Success')
+                // update the table in the front-end
+                const rows = [...data]
+                const index = oldData.tableData.id
+                rows.splice(index, 1)
+                setData(rows)
+                resolve()
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+                resolve()
+            })
     }
 
     const loadUserGroceryList = (rowData) => {
@@ -95,7 +116,6 @@ export default function GroceryListIngredients() {
             .then((res) => setData([...res]))
             .then(() => {
                 setSelectedList(rowData.listID)
-                console.log(selectedList)
             })
     }
 
