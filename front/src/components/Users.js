@@ -58,7 +58,7 @@ export default function Users() {
         resolve()
     }
 
-    const handleRowUpdate = (newData, oldData, resolve) => {
+    const handleRowUpdate = (newData, resolve) => {
         fetch('/users', {
             method: 'PUT',
             headers: {
@@ -93,18 +93,26 @@ export default function Users() {
             },
             body: JSON.stringify(oldData),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+            })
+
+            // If the update was successful then remove the values from the front end
+            .then(() => {
+                console.log('Success')
+                // update the table in the front-end
+                const rows = [...data]
+                const index = oldData.tableData.id
+                rows.splice(index, 1)
+                setData(rows)
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
-        const dataDelete = [...data]
-        const index = oldData.tableData.id
-        dataDelete.splice(index, 1)
-        setData([...dataDelete])
-        resolve()
     }
 
     return (
