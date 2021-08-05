@@ -8,7 +8,7 @@ export default function FoodGroups() {
         { title: 'Food Group', field: 'name' },
     ]
 
-    // initialize state variable and update fnction for table data
+    // initialize state variable and update function for table data
     const [data, setData] = useState([])
 
     // fetch data from db on component load

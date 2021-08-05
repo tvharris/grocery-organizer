@@ -4,18 +4,20 @@ import Container from '@material-ui/core/Container'
 
 export default function Ingredients() {
 
-    //Initiate State
+    // initialize state variables and update functions for table data
+    // and foodGroup selector
     const [ingredients, setIngredients] = useState([])
     const [foodGroups, setFoodGroups] = useState({})
 
     var columns = [
         { title: 'Ingredient', field: 'name' },
         { title: 'id', field: 'ingredientID', hidden: true },
-        { title: 'Food Group', field: 'FoodGroups.name', lookup: foodGroups },
+        // { title: 'Food Group', field: 'FoodGroups.name', lookup: foodGroups },
+        { title: 'Food Group', field: 'fgname', lookup: foodGroups },
     ]
 
 
-    // convert array of table rows to object for lookup - {name:name}
+    // convert array of table rows to object for foodGroup selector - {name:name}
     function arrayToObject(arr) {
         let foodGroups = {}
         arr.forEach((row) => {
@@ -24,46 +26,60 @@ export default function Ingredients() {
         return foodGroups
     }
 
-    /*fetch ingredients on load*/
+    // fetch data from db on component load
     useEffect(() => {
 
-        /*load the user's database info*/
+        // table data
         fetch('/ingredients')
             .then(res => res.json())
             .then(res => setIngredients(res))
 
-        //load the foodGroups
+        // food group selector data
         fetch('/food_group')
             .then((res) => res.json())
             .then((res) => setFoodGroups(arrayToObject(res)))
-        //.then(res => setFoodGroups([...res]))
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
-        let ingredientData = { ingredientName: newData.name, foodGroup: newData.FoodGroups.name }
+        // let ingredientData = { ingredientName: newData.name, foodGroup: newData.fgname }
+        console.log(newData)
+        // console.log(ingredientData)
         fetch('/ingredients', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(ingredientData),
+            body: JSON.stringify(newData),
+            // body: JSON.stringify(ingredientData),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
+            .then((dbRow) => {
+                console.log('Success:', dbRow)
+
+                // newData is an object, e.g., {name: 'vegetable'}, which
+                // also has the material-table row index
+                // dbRow is the added row returned from the db, e.g., [{foodGroupID: 17, name: 'vegetable'}]
+                // add the ID from the dbRow to newData and update the table in the front-end
+                newData['ingredientID'] = dbRow[0]['ingredientID']
+
+                let rows = [...ingredients]
+                rows.push(newData)
+                setIngredients(rows)
+                resolve()
             })
             .catch((error) => {
-                console.log('Error:', error)
+                console.log(error)
+                resolve()
             })
-
-        // update front-end state
-        let dataToAdd = [...ingredients]
-        dataToAdd.push(newData)
-        setIngredients(dataToAdd)
-        resolve()
     }
 
     const handleRowUpdate = (newData, oldData, resolve) => {
+        console.log(newData)
         fetch('/ingredients', {
             method: 'PUT',
             headers: {
