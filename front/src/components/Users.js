@@ -25,9 +25,7 @@ export default function Users() {
         /*load the user's database info*/
         fetch('/users')
             .then(res => res.json())
-            .then(res =>
-                setData(res)
-            )
+            .then(res => setData(res))
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
@@ -38,12 +36,20 @@ export default function Users() {
             },
             body: JSON.stringify(newData),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
+            .then((dbRow) => {
+                console.log('Row Added:', dbRow)
+                setData([...data, ...dbRow])
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
 
         let dataToAdd = [...data]
@@ -52,7 +58,7 @@ export default function Users() {
         resolve()
     }
 
-    const handleRowUpdate = (newData, oldData, resolve) => {
+    const handleRowUpdate = (newData, resolve) => {
         fetch('/users', {
             method: 'PUT',
             headers: {
@@ -60,19 +66,23 @@ export default function Users() {
             },
             body: JSON.stringify(newData),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
+
+            // Only update front end following a successful update to the backend
+            .then((updatedData) => {
+                console.log("update successful")
+                setData([...updatedData])
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
-
-        const dataUpdate = [...data]
-        const index = oldData.tableData.id
-        dataUpdate[index] = newData
-        setData([...dataUpdate])
-        resolve()
     }
 
     const handleRowDelete = (oldData, resolve) => {
@@ -83,18 +93,26 @@ export default function Users() {
             },
             body: JSON.stringify(oldData),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+            })
+
+            // If the update was successful then remove the values from the front end
+            .then(() => {
+                console.log('Success')
+                // update the table in the front-end
+                const rows = [...data]
+                const index = oldData.tableData.id
+                rows.splice(index, 1)
+                setData(rows)
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
-        const dataDelete = [...data]
-        const index = oldData.tableData.id
-        dataDelete.splice(index, 1)
-        setData([...dataDelete])
-        resolve()
     }
 
     return (
