@@ -25,9 +25,7 @@ export default function Users() {
         /*load the user's database info*/
         fetch('/users')
             .then(res => res.json())
-            .then(res =>
-                setData(res)
-            )
+            .then(res => setData(res))
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
@@ -38,12 +36,20 @@ export default function Users() {
             },
             body: JSON.stringify(newData),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
+            .then((dbRow) => {
+                console.log('Row Added:', dbRow)
+                setData([...data, ...dbRow])
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
 
         let dataToAdd = [...data]

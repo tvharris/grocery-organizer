@@ -56,6 +56,15 @@ def users():
         query = f"INSERT INTO Users (email, username) \
                   VALUE ('{email}', '{username}');"
         cursor = db.execute_query(db_connection=db_connection, query=query)
+
+        # return the newly added row for the front end to add
+        query = "SELECT * FROM Users WHERE \
+                userID = (SELECT MAX(userID) FROM Users);"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        print(jsonify(results), type(results), results)
+        return jsonify(results)
+
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
         return jsonify(results)
