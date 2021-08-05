@@ -34,15 +34,8 @@ export default function FoodGroups() {
             })
             .then((dbRow) => {
                 console.log('Success:', dbRow)
-
-                // newData is an object, e.g., {name: 'vegetable'}, which
-                // also has the material-table row index
-                // dbRow is the added row returned from the db, e.g., [{foodGroupID: 17, name: 'vegetable'}]
-                // add the ID from the dbRow to newData and update the table in the front-end
-                newData['foodGroupID'] = dbRow[0]['foodGroupID']
-                let rows = [...data]
-                rows.push(newData)
-                setData(rows)
+                // update the table with the new row
+                setData([...data, ...dbRow])
                 resolve()
             })
             .catch((error) => {

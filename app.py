@@ -140,9 +140,6 @@ def ingredients():
     # if we receive a get request we need to execute a get query and return
     # all users from the DB as json.
     if request.method == 'GET':
-        # query = "SELECT \
-        #          Ingredients.name, FoodGroups.name, Ingredients.ingredientID \
-        #          FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID)"
         query = "SELECT \
                  Ingredients.name, FoodGroups.name fgname, Ingredients.ingredientID \
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID)"
@@ -152,11 +149,10 @@ def ingredients():
 
     if request.method == 'POST':
         json_data = request.get_json()
-        # ingredientName = json_data['ingredientName']
         ingredientName = json_data['name']
-        # foodGroupName = json_data['foodGroup']
         foodGroupName = json_data['fgname']
 
+        # execute INSERT
         query = f"INSERT INTO Ingredients (name, foodGroupID) \
                 VALUE \
                 ('{ingredientName}', \
@@ -166,10 +162,6 @@ def ingredients():
         cursor = db.execute_query(db_connection=db_connection, query=query)
 
         # return the inserted row
-        # query = "SELECT \
-        #          Ingredients.name, FoodGroups.name, Ingredients.ingredientID \
-        #          FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID) WHERE \
-        #         Ingredients.ingredientID = (SELECT MAX(ingredientID) FROM Ingredients);"
         query = "SELECT \
                  Ingredients.name, FoodGroups.name fgname, Ingredients.ingredientID \
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID) WHERE \
@@ -182,10 +174,7 @@ def ingredients():
 
     if request.method == 'PUT':
         json_data = request.get_json()
-        # let ingredientData = { ingredientID: newData.ingredientID,
-        # ingredientName: newData.name, foodGroup: newData.FoodGroups.name }
         ingredientName = json_data['name']
-        # foodGroupName = json_data['FoodGroups.name']
         foodGroupName = json_data['fgname']
         ingredientID = json_data['ingredientID']
 
@@ -225,7 +214,6 @@ def food_group():
         results = cursor.fetchall()
         return(jsonify(results))
 
-    # POST ROUTE
     if request.method == 'POST':
         # extract data from request object
         json_data = request.get_json()

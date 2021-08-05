@@ -45,8 +45,8 @@ export default function GroceryLists() {
             body: JSON.stringify(newData),
         })
             .then((res) => res.json())
-            // res is the added row, use it to update state
-            .then((res) => setData([...data, ...res]))
+            // update the table with the new row
+            .then((dbRow) => setData([...data, ...dbRow]))
             .catch((error) => {
                 console.log('Error:', error)
             })

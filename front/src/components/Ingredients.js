@@ -12,7 +12,6 @@ export default function Ingredients() {
     var columns = [
         { title: 'Ingredient', field: 'name' },
         { title: 'id', field: 'ingredientID', hidden: true },
-        // { title: 'Food Group', field: 'FoodGroups.name', lookup: foodGroups },
         { title: 'Food Group', field: 'fgname', lookup: foodGroups },
     ]
 
@@ -41,16 +40,12 @@ export default function Ingredients() {
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
-        // let ingredientData = { ingredientName: newData.name, foodGroup: newData.fgname }
-        console.log(newData)
-        // console.log(ingredientData)
         fetch('/ingredients', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(newData),
-            // body: JSON.stringify(ingredientData),
         })
             .then((response) => {
                 if (!response.ok) {
@@ -60,16 +55,8 @@ export default function Ingredients() {
             })
             .then((dbRow) => {
                 console.log('Success:', dbRow)
-
-                // newData is an object, e.g., {name: 'vegetable'}, which
-                // also has the material-table row index
-                // dbRow is the added row returned from the db, e.g., [{foodGroupID: 17, name: 'vegetable'}]
-                // add the ID from the dbRow to newData and update the table in the front-end
-                newData['ingredientID'] = dbRow[0]['ingredientID']
-
-                let rows = [...ingredients]
-                rows.push(newData)
-                setIngredients(rows)
+                // update the table with the new row
+                setIngredients([...ingredients, ...dbRow])
                 resolve()
             })
             .catch((error) => {
@@ -88,18 +75,19 @@ export default function Ingredients() {
             body: JSON.stringify(newData),
         })
             .then(data => data.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then(() => {
+                console.log('Success')
+                // update the table in the front-end
                 const ingredientUpate = [...ingredients]
                 const index = oldData.tableData.id
                 ingredientUpate[index] = newData
                 setIngredients([...ingredientUpate])
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
-
-        resolve()
     }
 
     const handleRowDelete = (oldData, resolve) => {
@@ -110,20 +98,26 @@ export default function Ingredients() {
             },
             body: JSON.stringify(oldData),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+            })
+            .then(() => {
+                console.log('Success')
+                // update the table in the front-end
+                const rows = [...ingredients]
+                const index = oldData.tableData.id
+                rows.splice(index, 1)
+                setIngredients(rows)
+                resolve()
             })
             .catch((error) => {
-                console.log('Error:', error)
+                console.log(error)
+                resolve()
             })
-
-        const dataDelete = [...ingredients]
-        const index = oldData.tableData.id
-        dataDelete.splice(index, 1)
-        setIngredients([...dataDelete])
-        resolve()
     }
+
     return (
         <div>
             <Container maxWidth='sm'>
