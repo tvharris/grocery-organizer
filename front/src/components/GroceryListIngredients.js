@@ -9,12 +9,27 @@ export default function GroceryListIngredients() {
         {
             title: 'Username',
             field: 'username',
-            // lookup: { john_doe: 'john_doe', jane_doe: 'jane_doe' },
         },
         { title: 'Date', field: 'listDate', type: 'date' },
     ]
 
+    // the list of all user grocery lists
     const [GroceryListData, setGroceryListData] = useState([])
+
+    // the currently selected list
+    const [selectedList, setSelectedList] = useState()
+
+    // the set of possible incredients
+    const [ingredients, setIngredients] = useState([])
+
+    // convert array of table rows to object for foodGroup selector - {name:name}
+    function arrayToObject(arr) {
+        let ingredients = {}
+        arr.forEach((row) => {
+            ingredients[row.name] = row.name
+        })
+        return ingredients
+    }
 
     var columns = [
         // Primary key actually isn't a single id - need to consider this more
@@ -22,24 +37,48 @@ export default function GroceryListIngredients() {
         {
             title: 'Ingredient',
             field: 'name',
-            //lookup: { Carrots: 'Carrots', Cilantro: 'Cilantro', Milk: 'Milk' },
+            lookup: ingredients,
         },
     ]
     /*fetch grocery_lists on load*/
     useEffect(() => {
+
         /*load the user's database info*/
         fetch('/grocery_lists')
             .then((res) => res.json())
             .then((res) => setGroceryListData(res))
+
+        // Load potential ingredients to be added
+        fetch('/ingredients')
+            .then((res) => res.json())
+            .then((res) => setIngredients(arrayToObject(res)))
     }, [])
 
     const [data, setData] = useState([])
 
     const handleRowAdd = (newData, resolve) => {
-        let dataToAdd = [...data]
-        dataToAdd.push(newData)
-        setData(dataToAdd)
-        resolve()
+        fetch(`/grocery_list_ingredients/${selectedList}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newData),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
+            .then((updatedList) => {
+                console.log("update successful")
+                setData([...updatedList])
+                resolve()
+            })
+            .catch((error) => {
+                console.log('Error:', error)
+                resolve()
+            })
     }
 
     const handleRowDelete = (oldData, resolve) => {
@@ -51,10 +90,13 @@ export default function GroceryListIngredients() {
     }
 
     const loadUserGroceryList = (rowData) => {
-        console.log(rowData.listID)
         fetch(`/grocery_list_ingredients/${rowData.listID}`)
             .then((res) => res.json())
             .then((res) => setData([...res]))
+            .then(() => {
+                setSelectedList(rowData.listID)
+                console.log(selectedList)
+            })
     }
 
     return (
