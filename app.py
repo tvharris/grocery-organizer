@@ -92,6 +92,10 @@ def users():
         # execute SQL query
         query = f"UPDATE Users SET username = '{username}', email = '{email}' WHERE userID = '{userID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
+
+        query2 = "SELECT * FROM Users;"
+        cursor = db.execute_query(db_connection=db_connection, query=query2)
+
         results = cursor.fetchall()
         return jsonify(results)
 
@@ -264,7 +268,8 @@ def food_group():
         name = json_data['name']
 
         # execute SQL query
-        query = f"UPDATE FoodGroups SET name = '{name}' WHERE foodGroupID = '{foodGroupID}';"
+        query = f"UPDATE FoodGroups SET name = '{name}' \
+                WHERE foodGroupID = '{foodGroupID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         return jsonify(results)

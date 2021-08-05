@@ -66,19 +66,23 @@ export default function Users() {
             },
             body: JSON.stringify(newData),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
+
+            // Only update front end following a successful update to the backend
+            .then((updatedData) => {
+                console.log("update successful")
+                setData([...updatedData])
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
-
-        const dataUpdate = [...data]
-        const index = oldData.tableData.id
-        dataUpdate[index] = newData
-        setData([...dataUpdate])
-        resolve()
     }
 
     const handleRowDelete = (oldData, resolve) => {
