@@ -1,13 +1,18 @@
-from flask import Flask, render_template, json, jsonify, request
-# from flask_cors import CORS
+from flask import Flask, jsonify, request
 import os
 import database.db_connector as db
 
 # Configuration
 app = Flask(__name__, static_folder='./front/build', static_url_path='/')
 
-# HAD TO CONNECT FOR EVERY ROUTE AND CLOSE AFTER EVERY REQUEST TO ALLOW MULTIPLE REQUESTS
-# db_connection = db.connect_to_database()
+'''
+HAD TO:
+
+    1) CONNECT FOR EVERY ROUTE; AND,
+    2) CLOSE AFTER EVERY REQUEST
+
+TO ALLOW MULTIPLE REQUESTS
+'''
 
 # Routes
 
@@ -109,7 +114,7 @@ def grocery_lists():
             VALUE ((SELECT userID from Users \
             WHERE username = '{username}'), NOW())"
         cursor = db.execute_query(db_connection=db_connection, query=query)
-        
+
         # get and return the row that was just added (most recent date)
         query2 = "SELECT username, listDate, listID \
                  FROM GroceryLists JOIN Users USING (userID) \
@@ -166,7 +171,7 @@ def ingredients():
                  Ingredients.name, FoodGroups.name fgname, Ingredients.ingredientID \
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID) WHERE \
                 Ingredients.ingredientID = (SELECT MAX(ingredientID) FROM Ingredients);"
-                 
+
         cursor = db.execute_query(db_connection=db_connection, query=query)
 
         results = cursor.fetchall()
@@ -254,6 +259,7 @@ def food_group():
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         return jsonify(results)
+
 
 @ app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
 def user_ingredients(user_id):
