@@ -1,7 +1,6 @@
 import MaterialTable from 'material-table'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Container from '@material-ui/core/Container'
-import React, { useEffect } from 'react'
 
 export default function GroceryLists() {
     // data for the grocery list table
@@ -19,8 +18,9 @@ export default function GroceryLists() {
     // convert array of table rows to object for lookup - {username:username}
     function arrayToObject(arr) {
         let usernames = {}
-        for (let i = 0; i < arr.length; ++i)
-            usernames[arr[i].username] = arr[i].username
+        arr.forEach((row) => {
+            usernames[row.username] = row.username
+        })
         return usernames
     }
 
@@ -45,8 +45,8 @@ export default function GroceryLists() {
             body: JSON.stringify(newData),
         })
             .then((res) => res.json())
-            // res is the added row, use it to update state
-            .then((res) => setData([...data, ...res]))
+            // update the table with the new row
+            .then((dbRow) => setData([...data, ...dbRow]))
             .catch((error) => {
                 console.log('Error:', error)
             })
@@ -85,7 +85,7 @@ export default function GroceryLists() {
                     columns={columns}
                     data={data}
                     editable={{
-                       onRowAdd: (newData) =>
+                        onRowAdd: (newData) =>
                             new Promise((resolve) => {
                                 // let listDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
                                 // newData['listDate'] = listDate

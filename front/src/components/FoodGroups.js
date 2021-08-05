@@ -1,7 +1,6 @@
 import MaterialTable from 'material-table'
-import { useState } from 'react'
 import Container from '@material-ui/core/Container'
-import React, { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function FoodGroups() {
     var columns = [
@@ -9,11 +8,11 @@ export default function FoodGroups() {
         { title: 'Food Group', field: 'name' },
     ]
 
+    // initialize state variable and update function for table data
     const [data, setData] = useState([])
 
-    /*fetch users on load*/
+    // fetch data from db on component load
     useEffect(() => {
-        /*load the user's database info*/
         fetch('/food_group')
             .then((res) => res.json())
             .then((res) => setData(res))
@@ -27,22 +26,20 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(newData),
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
+            })
             .then((dbRow) => {
                 console.log('Success:', dbRow)
-
-                // newData is an object, e.g., {name: 'vegetable'}, which
-                // also has the material-table row
-                // dbRow is the added row returned from the db, e.g., [{foodGroupID: 17, name: 'vegetable'}]
-                // add the ID from the dbRow to newData and update the table
-                newData['foodGroupID'] = dbRow[0]['foodGroupID']
-                let tableData = [...data]
-                tableData.push(newData)
-                setData(tableData)
+                // update the table with the new row
+                setData([...data, ...dbRow])
                 resolve()
             })
             .catch((error) => {
-                console.log('Error:', error)
+                console.log(error)
                 resolve()
             })
     }
@@ -55,19 +52,24 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(newData),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+            })
+            .then(() => {
+                console.log('Success')
+                // update the table in the front-end
+                const rows = [...data]
+                const index = oldData.tableData.id
+                rows[index] = newData
+                setData(rows)
+                resolve()
             })
             .catch((error) => {
-                console.log('Error:', error)
+                console.log(error)
+                resolve()
             })
-
-        const dataUpdate = [...data]
-        const index = oldData.tableData.id
-        dataUpdate[index] = newData
-        setData([...dataUpdate])
-        resolve()
     }
 
     const handleRowDelete = (oldData, resolve) => {
@@ -78,19 +80,24 @@ export default function FoodGroups() {
             },
             body: JSON.stringify(oldData),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+            })
+            .then(() => {
+                console.log('Success')
+                // update the table in the front-end
+                const rows = [...data]
+                const index = oldData.tableData.id
+                rows.splice(index, 1)
+                setData(rows)
+                resolve()
             })
             .catch((error) => {
-                console.log('Error:', error)
+                console.log(error)
+                resolve()
             })
-
-        const dataDelete = [...data]
-        const index = oldData.tableData.id
-        dataDelete.splice(index, 1)
-        setData([...dataDelete])
-        resolve()
     }
 
     return (
