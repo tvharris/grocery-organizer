@@ -16,11 +16,12 @@ export default function GroceryListIngredients() {
     // the list of all user grocery lists
     const [GroceryListData, setGroceryListData] = useState([])
 
-    // the currently selected list
+    // the currently selected list (for the purposes of dat)
     const [selectedList, setSelectedList] = useState()
 
     // the set of possible incredients
     const [ingredients, setIngredients] = useState([])
+
 
     // convert array of table rows to object for foodGroup selector - {name:name}
     function arrayToObject(arr) {
@@ -138,6 +139,11 @@ export default function GroceryListIngredients() {
                             title='Select a Grocery List'
                             columns={GroceryListColumns}
                             data={GroceryListData}
+                            options={{
+                                rowStyle: rowData => ({
+                                    backgroundColor: (selectedList === rowData.listID) ? '#EEE' : '#FFF'
+                                })
+                            }}
                             actions={[
                                 {
                                     icon: '>',

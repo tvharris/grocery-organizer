@@ -2,14 +2,6 @@ import MaterialTable from 'material-table'
 import { useState, useEffect } from 'react'
 import Container from '@material-ui/core/Container'
 
-//postData('/users', {
-//method: 'POST',
-//headers: {
-//'Content-Type': 'application/json',
-//},
-//body: JSON.stringify(newData),
-//})
-
 export default function Users() {
 
     var columns = [
