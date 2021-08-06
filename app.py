@@ -62,11 +62,6 @@ def users():
                 userID = (SELECT MAX(userID) FROM Users);"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        print(jsonify(results), type(results), results)
-        return jsonify(results)
-
-        results = cursor.fetchall()
-        print(jsonify(results), type(results), results)
         return jsonify(results)
 
     # DELETE ROUTE
@@ -306,11 +301,11 @@ def user_ingredients(user_id):
 
         cursor = db.execute_query(db_connection=db_connection, query=query)
 
-        # return the updated data 
+        # return the updated data
         query = f"SELECT name from User_Ingredients \
                 JOIN Ingredients USING (ingredientID)\
                 WHERE User_Ingredients.userID = {user_id}"
-                 
+
         cursor = db.execute_query(db_connection=db_connection, query=query)
 
         results = cursor.fetchall()

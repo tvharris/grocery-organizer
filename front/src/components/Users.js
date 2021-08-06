@@ -58,7 +58,7 @@ export default function Users() {
         resolve()
     }
 
-    const handleRowUpdate = (newData, resolve) => {
+    const handleRowUpdate = (newData, oldData, resolve) => {
         fetch('/users', {
             method: 'PUT',
             headers: {
