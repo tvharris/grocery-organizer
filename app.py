@@ -6,17 +6,10 @@ import database.db_connector as db
 app = Flask(__name__, static_folder='./front/build', static_url_path='/')
 
 '''
-HAD TO:
-
-    1) CONNECT FOR EVERY ROUTE; AND,
-    2) CLOSE AFTER EVERY REQUEST
-
-TO ALLOW MULTIPLE REQUESTS
+CONNECTS FOR EVERY ROUTE TO ALLOW MULTIPLE REQUESTS
 '''
 
 # Routes
-
-
 @app.route('/')
 def root():
     # return render_template("main.j2")

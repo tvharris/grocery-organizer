@@ -7,12 +7,14 @@ SELECT email, username, userID FROM Users;
 
  --- Add:  
 INSERT INTO Users (email, username) VALUE (x, y);
+ --- Return the added row:
+SELECT * FROM Users WHERE userID = (SELECT MAX(userID) FROM Users);
 
  --- Edit email : 
-UPDATE Users SET (email) = 'new_value' WHERE userID='_'[ID]''
+UPDATE Users SET (email) = 'new_value' WHERE userID='_'[ID]'';
 
  --- Edit users : 
-UPDATE Users SET (username) = 'new_value' WHERE userID=''[ID]''
+UPDATE Users SET (username) = 'new_value' WHERE userID=''[ID]'';
 
  --- Delete : 
 DELETE FROM Users WHERE userID="'[ID]'";
@@ -41,10 +43,13 @@ SELECT username, userID FROM Users;
  --## Ingredients:
 
  --- Initial Load : 
-SELECT Ingredients.name, FoodGroups.name, Ingredients.ingredientID FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID);
+SELECT Ingredients.name, FoodGroups.name fgname, Ingredients.ingredientID FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID);
 
  --- Add: 
 INSERT INTO Ingredients (name, foodGroupID) VALUE ([NAME], (SELECT foodGroupID WHERE name='FoodGroups.name'));
+ --- Return the added row:
+SELECT Ingredients.name, FoodGroups.name fgname, Ingredients.ingredientID FROM Ingredients 
+LEFT JOIN FoodGroups USING (foodGroupID) WHERE Ingredients.ingredientID = (SELECT MAX(ingredientID) FROM Ingredients);
 
  --- Edit name : 
 UPDATE Ingredients SET (name) = '[NEW NAME]' WHERE ingredientID='_'[ID]''
@@ -67,6 +72,8 @@ SELECT name, foodGroupID FROM FoodGroups;
 
  --- Add : 
 INSERT INTO FoodGroups (name) VALUE ([INPUT]);
+ --- Return the added row:
+SELECT * FROM FoodGroups WHERE foodGroupID = (SELECT MAX(foodGroupID) FROM FoodGroups);
 
  --- Edit : 
 UPDATE FoodGroups SET name='[INPUT]' WHERE foodGroupID='[ID]' ;
