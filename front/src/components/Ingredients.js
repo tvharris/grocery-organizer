@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import Container from '@material-ui/core/Container'
 
 export default function Ingredients() {
-
     // initialize state variables and update functions for table data
     // and foodGroup selector
     const [ingredients, setIngredients] = useState([])
@@ -15,23 +14,22 @@ export default function Ingredients() {
         { title: 'Food Group', field: 'fgname', lookup: foodGroups },
     ]
 
-
     // convert array of table rows to object for foodGroup selector - {name:name}
     function arrayToObject(arr) {
         let foodGroups = {}
         arr.forEach((row) => {
             foodGroups[row.name] = row.name
         })
+        foodGroups[null] = 'none'
         return foodGroups
     }
 
     // fetch data from db on component load
     useEffect(() => {
-
         // table data
         fetch('/ingredients')
-            .then(res => res.json())
-            .then(res => setIngredients(res))
+            .then((res) => res.json())
+            .then((res) => setIngredients(res))
 
         // food group selector data
         fetch('/food_group')
@@ -40,6 +38,7 @@ export default function Ingredients() {
     }, [])
 
     const handleRowAdd = (newData, resolve) => {
+        console.log('newData:', newData)
         fetch('/ingredients', {
             method: 'POST',
             headers: {
@@ -74,7 +73,7 @@ export default function Ingredients() {
             },
             body: JSON.stringify(newData),
         })
-            .then(data => data.json())
+            .then((data) => data.json())
             .then(() => {
                 console.log('Success')
                 // update the table in the front-end

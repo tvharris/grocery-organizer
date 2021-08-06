@@ -168,7 +168,10 @@ def ingredients():
     if request.method == 'POST':
         json_data = request.get_json()
         ingredientName = json_data['name']
-        foodGroupName = json_data['fgname']
+        try:
+            foodGroupName = json_data['fgname']
+        except KeyError:
+            foodGroupName = 'NULL'
 
         # execute INSERT
         query = f"INSERT INTO Ingredients (name, foodGroupID) \
