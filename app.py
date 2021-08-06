@@ -1,13 +1,18 @@
-from flask import Flask, render_template, json, jsonify, request
-# from flask_cors import CORS
+from flask import Flask, jsonify, request
 import os
 import database.db_connector as db
 
 # Configuration
 app = Flask(__name__, static_folder='./front/build', static_url_path='/')
 
-# HAD TO CONNECT FOR EVERY ROUTE AND CLOSE AFTER EVERY REQUEST TO ALLOW MULTIPLE REQUESTS
-# db_connection = db.connect_to_database()
+'''
+HAD TO:
+
+    1) CONNECT FOR EVERY ROUTE; AND,
+    2) CLOSE AFTER EVERY REQUEST
+
+TO ALLOW MULTIPLE REQUESTS
+'''
 
 # Routes
 
@@ -51,6 +56,15 @@ def users():
         query = f"INSERT INTO Users (email, username) \
                   VALUE ('{email}', '{username}');"
         cursor = db.execute_query(db_connection=db_connection, query=query)
+
+        # return the newly added row for the front end to add
+        query = "SELECT * FROM Users WHERE \
+                userID = (SELECT MAX(userID) FROM Users);"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        print(jsonify(results), type(results), results)
+        return jsonify(results)
+
         results = cursor.fetchall()
         print(jsonify(results), type(results), results)
         return jsonify(results)
@@ -78,6 +92,10 @@ def users():
         # execute SQL query
         query = f"UPDATE Users SET username = '{username}', email = '{email}' WHERE userID = '{userID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
+
+        query2 = "SELECT * FROM Users;"
+        cursor = db.execute_query(db_connection=db_connection, query=query2)
+
         results = cursor.fetchall()
         return jsonify(results)
 
@@ -109,7 +127,7 @@ def grocery_lists():
             VALUE ((SELECT userID from Users \
             WHERE username = '{username}'), NOW())"
         cursor = db.execute_query(db_connection=db_connection, query=query)
-        
+
         # get and return the row that was just added (most recent date)
         query2 = "SELECT username, listDate, listID \
                  FROM GroceryLists JOIN Users USING (userID) \
@@ -166,7 +184,7 @@ def ingredients():
                  Ingredients.name, FoodGroups.name fgname, Ingredients.ingredientID \
                  FROM Ingredients LEFT JOIN FoodGroups USING (foodGroupID) WHERE \
                 Ingredients.ingredientID = (SELECT MAX(ingredientID) FROM Ingredients);"
-                 
+
         cursor = db.execute_query(db_connection=db_connection, query=query)
 
         results = cursor.fetchall()
@@ -250,7 +268,8 @@ def food_group():
         name = json_data['name']
 
         # execute SQL query
-        query = f"UPDATE FoodGroups SET name = '{name}' WHERE foodGroupID = '{foodGroupID}';"
+        query = f"UPDATE FoodGroups SET name = '{name}' \
+                WHERE foodGroupID = '{foodGroupID}';"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         return jsonify(results)
@@ -308,7 +327,7 @@ def user_ingredients(user_id):
 
 
 # Route to provide the ingredients from a given grocery list
-@ app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST'])
+@ app.route('/grocery_list_ingredients/<int:listID>', methods=['GET', 'POST', 'DELETE'])
 def grocery_list_ingredients(listID):
 
     db_connection = db.connect_to_database()
@@ -321,7 +340,39 @@ def grocery_list_ingredients(listID):
                 WHERE GroceryList_Ingredients.listID = {listID}"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
-        print(jsonify(results))
+        return jsonify(results)
+
+    if request.method == 'POST':
+        json_data = request.get_json()
+        name = json_data['name']
+
+        # add the ingredient to the composite list
+        query = f"INSERT INTO GroceryList_Ingredients \
+                (listID, ingredientID) \
+                VALUES ('{listID}', \
+                (SELECT ingredientID from Ingredients \
+                WHERE name='{name}'));"
+
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+
+        # retrieve the updated data
+        query = f"SELECT name, ingredientID from GroceryList_Ingredients \
+                JOIN Ingredients USING (ingredientID) \
+                WHERE GroceryList_Ingredients.listID = {listID}"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
+        return jsonify(results)
+
+    if request.method == 'DELETE':
+        json_data = request.get_json()
+        name = json_data['name']
+        query = f"DELETE FROM GroceryList_Ingredients \
+                WHERE ingredientID=\
+                (SELECT ingredientID from Ingredients WHERE name='{name}')\
+                AND listID = '{listID}';"
+
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
         return jsonify(results)
 
 

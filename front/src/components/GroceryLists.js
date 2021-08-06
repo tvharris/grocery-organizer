@@ -44,17 +44,32 @@ export default function GroceryLists() {
             },
             body: JSON.stringify(newData),
         })
-            .then((res) => res.json())
-            // update the table with the new row
-            .then((dbRow) => setData([...data, ...dbRow]))
-            .catch((error) => {
-                console.log('Error:', error)
+            // check for error before moving forward with response
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+                return response.json()
             })
 
-        resolve()
+            // code added to the backend to return new row added
+            .then((dbRow) => {
+                setData([...data, ...dbRow])
+                resolve()
+            })
+
+            // catch error if retrieval of added row failed.
+            .catch((error) => {
+                console.log(error)
+                resolve()
+            })
+
+
     }
 
     const handleRowDelete = (oldData, resolve) => {
+
+        // Make an initial DELETE request to the back end.
         fetch('/grocery_lists', {
             method: 'DELETE',
             headers: {
@@ -62,19 +77,26 @@ export default function GroceryLists() {
             },
             body: JSON.stringify(oldData),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Status code: ${response.status}`)
+                }
+            })
+
+            // If the request was succesfull then update the front end to represent the new data
+            .then(() => {
+                console.log('Success')
+                const dataDelete = [...data]
+                const index = oldData.tableData.id
+                dataDelete.splice(index, 1)
+                setData([...dataDelete])
+                resolve()
             })
             .catch((error) => {
                 console.log('Error:', error)
+                resolve()
             })
 
-        const dataDelete = [...data]
-        const index = oldData.tableData.id
-        dataDelete.splice(index, 1)
-        setData([...dataDelete])
-        resolve()
     }
 
     return (
