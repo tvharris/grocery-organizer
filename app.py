@@ -255,7 +255,8 @@ def food_group():
         results = cursor.fetchall()
         return jsonify(results)
 
-@ app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST'])
+
+@ app.route('/user_ingredients/<int:user_id>', methods=['GET', 'POST', 'DELETE'])
 def user_ingredients(user_id):
 
     db_connection = db.connect_to_database()
@@ -269,6 +270,40 @@ def user_ingredients(user_id):
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = cursor.fetchall()
         print(jsonify(results))
+        return jsonify(results)
+
+    if request.method == 'POST':
+        json_data = request.get_json()
+        # ingredientName = json_data['name']
+        ingredientID = json_data['ingredientID']
+        # ingredientID = json_data['name']
+
+        # execute INSERT
+        query = f"INSERT INTO User_Ingredients (userID, ingredientID) \
+                VALUES ({user_id}, {ingredientID});"
+
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+
+        # return the updated data 
+        query = f"SELECT name from User_Ingredients \
+                JOIN Ingredients USING (ingredientID)\
+                WHERE User_Ingredients.userID = {user_id}"
+                 
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+
+        results = cursor.fetchall()
+        return jsonify(results)
+
+    if request.method == 'DELETE':
+        # extract data from request object
+        json_data = request.get_json()
+        # ingredientID = json_data['name']
+        ingredientID = json_data['ingredientID']
+
+        query = f"DELETE FROM User_Ingredients \
+                WHERE userID={user_id} AND ingredientID={ingredientID};"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = cursor.fetchall()
         return jsonify(results)
 
 

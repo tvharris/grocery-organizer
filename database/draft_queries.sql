@@ -87,7 +87,7 @@ VALUES ('[USER_ID_FROM_DROPDOWN]', '[INGREDIENT_ID_FROM_DROPDOWN]');
 
 
  --- Delete : 
-DELETE FROM User_Ingredients WHERE userID='[userID]' AND listID='[listID]' --;
+DELETE FROM User_Ingredients WHERE userID='[userID]' AND ingredientID='[ingredientID]' --;
 
  --#### Dropdown - Select User (User)
  --> Initial Load 
