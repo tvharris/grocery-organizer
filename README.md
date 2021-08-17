@@ -1,4 +1,8 @@
-# CS340 Group 70
+# Grocery Organizer
+![Users_GroceryLists](https://user-images.githubusercontent.com/51836567/129780754-406d4cf4-e2ef-4ee8-892f-379cfbb61deb.gif)
+![FoodGroups_Ingredients](https://user-images.githubusercontent.com/51836567/129780767-991101dd-1aff-45e7-8d34-6ed39423a9ca.gif)
+![UserIngred_GroceryListIngred](https://user-images.githubusercontent.com/51836567/129780775-8bde9e06-2bad-490f-a006-b31974860fb7.gif)
+
 ## File Structure
 This project uses Flask and React
 The Flask code is in app.py and database/db_connector.py
