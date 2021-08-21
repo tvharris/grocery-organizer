@@ -4,10 +4,11 @@
 ![UserIngred_GroceryListIngred](https://user-images.githubusercontent.com/51836567/129780775-8bde9e06-2bad-490f-a006-b31974860fb7.gif)
 
 ## File Structure
-This project uses Flask and React
 The Flask code is in app.py and database/db_connector.py
+
+The bulk of the React work is in front/src/components 
+
 The sql files for database table creation and the queries are in database/
-The bulk of our React work is in front/src/components
 
 ## References
 The navigation is set up in front/src/App.js using Material-UI Simple Tabs.  
