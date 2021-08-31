@@ -19,6 +19,7 @@ The following gifs illustrate the features and usage. (Clickable for higher reso
 ![UserIngred_GroceryListIngred](https://user-images.githubusercontent.com/51836567/129780775-8bde9e06-2bad-490f-a006-b31974860fb7.gif)
 
 **A simplified overview of the database is shown in the following entity relationship diagram (ERD).**
+
 ![image](https://user-images.githubusercontent.com/51836567/131431382-0cc27cc5-f279-40c8-923d-1acc7b178d4f.png)
 
 ## File Structure
